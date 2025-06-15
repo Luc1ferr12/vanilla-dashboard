@@ -96,14 +96,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
-    // Check for saved theme preference
+    // Check for saved theme preference, default to dark if none saved
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      body.classList.add('dark-mode');
-      if (themeToggle) themeToggle.textContent = '🌙';
-    } else {
+    if (savedTheme === 'light') {
       body.classList.remove('dark-mode');
       if (themeToggle) themeToggle.textContent = '💡';
+    } else {
+      body.classList.add('dark-mode');
+      if (themeToggle) themeToggle.textContent = '🌙';
+      // Set default theme to dark if no preference is saved
+      if (!savedTheme) localStorage.setItem('theme', 'dark');
     }
 
     // Theme toggle click handler
