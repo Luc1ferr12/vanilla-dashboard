@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Tools Page</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="budget-tools.css" />
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  </head>
+  <body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <div class="brand-container">
+        <div class="hamburger-menu" id="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-logo">C</div>
+        <div class="brand-name">Cash Budget</div>
+      </div>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button>
+        <div>🔔</div>
+
+        <div class="user-profile">
+          <div class="user-avatar">LCF</div>
+          <div>Fallen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <a class="nav-item" href="index.html">
+        <div class="nav-icon">💰</div>
+        <div class="nav-label">Dashboard</div>
+      </a>
+      <a class="nav-item" href="detailed.html">
+        <div class="nav-icon">📋</div>
+        <div class="nav-label">Detailed</div>
+      </a>
+      <a class="nav-item" href="debts.html">
+        <div class="nav-icon">😈</div>
+        <div class="nav-label">Debts</div>
+      </a>
+      <a class="nav-item active" href="budget_tools.html">
+        <div class="nav-icon">🛠️</div>
+        <div class="nav-label">Budget Tools</div>
+      </a>
+    </div>
+
+    <!-- Main Content for Budget Tools Page -->
+    <div class="main-content">
+      <h1 class="dashboard-title">Fitur Manajemen Budget</h1>
+      <h2 class="dashboard-subtitle">Kelola keuangan Anda dengan alat bantu yang komprehensif.</h2>
+
+      <!-- Content for Budget Management Features will go here -->
+      <div class="budget-tools-grid">
+        <!-- Target Budget per Kategori -->
+        <div class="budget-tool-card">
+          <div class="budget-tool-title">Target Budget per Kategori</div>
+          <p>Tetapkan dan lacak target pengeluaran Anda untuk setiap kategori.</p>
+          
+          <div class="form-group">
+            <label for="category-input">Kategori:</label>
+            <input type="text" id="category-input" placeholder="Contoh: Makanan, Transportasi" />
+          </div>
+          <div class="form-group">
+            <label for="target-amount-input">Target Jumlah (Rp):</label>
+            <input type="number" id="target-amount-input" placeholder="Rp 0" />
+          </div>
+          <button id="add-budget-target-btn" class="submit-button">Tambahkan Target</button>
+
+          <h3>Daftar Target Budget</h3>
+          <div class="table-container">
+            <table id="budget-target-table" class="detailed-table">
+              <thead>
+                <tr>
+                  <th>Kategori</th>
+                  <th>Target Jumlah</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data target budget akan dimuat di sini oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Perencanaan Keuangan Jangka Panjang -->
+        <div class="budget-tool-card">
+          <div class="budget-tool-title">Perencanaan Keuangan Jangka Panjang</div>
+          <p>Rencanakan tujuan keuangan Anda untuk masa depan.</p>
+          
+          <div class="form-group">
+            <label for="long-term-goal-name">Nama Tujuan:</label>
+            <input type="text" id="long-term-goal-name" placeholder="Contoh: Beli Rumah, Dana Pendidikan" />
+          </div>
+          <div class="form-group">
+            <label for="long-term-target-amount">Jumlah Target (Rp):</label>
+            <input type="number" id="long-term-target-amount" placeholder="Rp 0" />
+          </div>
+          <div class="form-group">
+            <label for="long-term-target-date">Target Tanggal:</label>
+            <div class="date-input-container">
+              <input type="text" id="long-term-target-date" placeholder="dd/mm/yyyy" />
+              <i class='bx bx-calendar calendar-icon'></i>
+            </div>
+          </div>
+          <button id="add-long-term-goal-btn" class="submit-button">Tambahkan Tujuan</button>
+
+          <h3>Daftar Tujuan Jangka Panjang</h3>
+          <div class="table-container">
+            <table id="long-term-goals-table" class="detailed-table">
+              <thead>
+                <tr>
+                  <th>Nama Tujuan</th>
+                  <th>Jumlah Target</th>
+                  <th>Target Tanggal</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data tujuan jangka panjang akan dimuat di sini oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Fitur "Sinking Fund" -->
+        <div class="budget-tool-card">
+          <div class="budget-tool-title">Sinking Fund</div>
+          <p>Sisihkan dana untuk pengeluaran besar yang akan datang.</p>
+          
+          <div class="form-group">
+            <label for="sinking-fund-name">Nama Dana:</label>
+            <input type="text" id="sinking-fund-name" placeholder="Contoh: Liburan, Renovasi Rumah" />
+          </div>
+          <div class="form-group">
+            <label for="sinking-fund-target-amount">Jumlah Target (Rp):</label>
+            <input type="number" id="sinking-fund-target-amount" placeholder="Rp 0" />
+          </div>
+          <div class="form-group">
+            <label for="sinking-fund-target-date">Target Tanggal:</label>
+            <div class="date-input-container">
+              <input type="text" id="sinking-fund-target-date" placeholder="dd/mm/yyyy" />
+              <i class='bx bx-calendar calendar-icon'></i>
+            </div>
+          </div>
+          <button id="add-sinking-fund-btn" class="submit-button">Tambahkan Dana</button>
+
+          <h3>Daftar Sinking Fund</h3>
+          <div class="table-container">
+            <table id="sinking-fund-table" class="detailed-table">
+              <thead>
+                <tr>
+                  <th>Nama Dana</th>
+                  <th>Jumlah Target</th>
+                  <th>Target Tanggal</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data sinking fund akan dimuat di sini oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Kalkulator Investasi dan Bunga -->
+        <div class="budget-tool-card">
+          <div class="budget-tool-title">Kalkulator Investasi & Bunga</div>
+          <p>Hitung potensi pertumbuhan investasi dan bunga Anda.</p>
+          
+          <div class="form-group">
+            <label for="investment-type">Jenis Investasi:</label>
+            <select id="investment-type">
+              <option value="general">Umum (Bunga)</option>
+              <option value="crypto">Kripto</option>
+              <option value="gold">Emas</option>
+            </select>
+          </div>
+
+          <div id="general-investment-inputs">
+            <div class="form-group">
+              <label for="principal-amount">Jumlah Pokok (Rp):</label>
+              <input type="number" id="principal-amount" placeholder="Rp 0" />
+            </div>
+            <div class="form-group">
+              <label for="interest-rate">Tingkat Bunga Tahunan (%):</label>
+              <input type="number" id="interest-rate" step="0.01" placeholder="Contoh: 5.00" />
+            </div>
+          </div>
+
+          <div id="crypto-investment-inputs" style="display: none;">
+            <div class="form-group">
+              <label for="crypto-coin">Pilih Koin Kripto:</label>
+              <div class="custom-select-container" id="crypto-custom-dropdown">
+                <div class="selected-option" id="crypto-selected-coin">
+                  <img id="crypto-selected-coin-icon" src="" alt="Bitcoin Icon" class="coin-icon" style="display: none;">
+                  <span id="crypto-selected-coin-name">Bitcoin</span>
+                </div>
+                <div class="options-list" id="crypto-dropdown-options"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Harga Saat Ini:</label>
+              <p id="crypto-current-price">Rp 0</p>
+            </div>
+            <div class="form-group">
+              <label for="crypto-investment-amount">Jumlah Investasi (Rp):</label>
+              <input type="number" id="crypto-investment-amount" placeholder="Rp 0" />
+            </div>
+             <div class="form-group">
+                <label for="crypto-annual-growth">Asumsi Pertumbuhan Tahunan Kripto (%):</label>
+                <input type="number" id="crypto-annual-growth" step="0.01" placeholder="Contoh: 10.00" value="10"/>
+            </div>
+          </div>
+
+          <div id="gold-investment-inputs" style="display: none;">
+            <div class="form-group">
+              <label for="gold-current-price-input">Harga Emas Saat Ini (per gram, asumsi):</label>
+              <input type="number" id="gold-current-price-input" placeholder="Contoh: 1.000.000" />
+            </div>
+            <div class="form-group">
+              <label for="gold-investment-amount">Jumlah Investasi (Rp):</label>
+              <input type="number" id="gold-investment-amount" placeholder="Rp 0" />
+            </div>
+             <div class="form-group">
+                <label for="gold-annual-growth">Asumsi Pertumbuhan Tahunan Emas (%):</label>
+                <input type="number" id="gold-annual-growth" step="0.01" placeholder="Contoh: 5.00" value="5"/>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="duration-years">Durasi (Tahun):</label>
+            <input type="number" id="duration-years" placeholder="Contoh: 10" />
+          </div>
+          <button id="calculate-investment-btn" class="submit-button">Hitung</button>
+
+          <h3>Hasil Perhitungan</h3>
+          <div class="result-display">
+            <p>Total Akhir Investasi: <strong id="final-amount">Rp 0</strong></p>
+            <p>Total Bunga Dihasilkan: <strong id="total-interest">Rp 0</strong></p>
+            <p id="crypto-gold-profit-loss" style="display: none;">Keuntungan/Kerugian: <strong id="profit-loss-amount">Rp 0</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Budget Target Modal (Hidden by default) -->
+    <div id="edit-budget-target-modal" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <h2>Edit Target Budget</h2>
+            <input type="hidden" id="edit-budget-target-id">
+            <div class="form-group">
+                <label for="edit-budget-category">Kategori:</label>
+                <input type="text" id="edit-budget-category" readonly>
+            </div>
+            <div class="form-group">
+                <label for="edit-budget-amount">Target Jumlah (Rp):</label>
+                <input type="number" id="edit-budget-amount">
+            </div>
+            <div class="modal-actions">
+                <button id="save-budget-target-btn" class="submit-button">Simpan Perubahan</button>
+                <button id="cancel-budget-target-btn" class="cancel-button">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- File Konfigurasi Firebase -->
+    <script src="config.js"></script>
+
+    <!-- Common Functions -->
+    <script src="common.js"></script>
+
+    <!-- Page Specific Script -->
+    <script src="budget_tools.js"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr Indonesian locale (optional, but recommended for 'id' locale) -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+  </body>
+</html> 

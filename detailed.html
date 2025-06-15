@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detailed Page</title>
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="common.css" />
+  <link rel="stylesheet" href="detailed.css" />
+</head>
+<body>
+ <!-- Header Bar -->
+ <div class="header-bar">
+    <div class="brand-container">
+      <div class="hamburger-menu" id="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="brand-logo">C</div>
+      <div class="brand-name">Cash Budget</div>
+    </div>
+
+    <div class="header-actions">
+      <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button>
+      <div>🔔</div>
+
+      <div class="user-profile">
+        <div class="user-avatar">LCF</div>
+        <div>Fallen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar (konsisten dengan index.html) -->
+  <div class="sidebar" id="sidebar">
+    <a class="nav-item" href="index.html">
+      <div class="nav-icon">💰</div>
+      <div class="nav-label">Dashboard</div>
+    </a>
+    <a class="nav-item active" href="detailed.html">
+      <div class="nav-icon">📋</div>
+      <div class="nav-label">Detailed</div>
+    </a>
+    <a class="nav-item" href="debts.html">
+      <div class="nav-icon">😈</div>
+      <div class="nav-label">Debts</div>
+    </a>
+    <a class="nav-item" href="budget_tools.html">
+      <div class="nav-icon">🛠️</div>
+      <div class="nav-label">Budget Tools</div>
+    </a>
+  </div>
+  <div class="detailed-main-content">
+    <!-- New Card: Input Cashflow -->
+    <div class="performance-container">
+        <div class="chart-header">
+            <div class="chart-title">Input Cashflow</div>
+        </div>
+
+        <!-- Konten baru: Filter dan Jumlah Uang -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label for="date-filter">Tanggal:</label>
+                <input type="date" id="date-filter" />
+            </div>
+            <div class="filter-group">
+                <label for="month-filter">Bulan:</label>
+                <select id="month-filter">
+                    <option value="">Pilih Bulan</option>
+                    <option value="Januari">Januari</option>
+                    <option value="Februari">Februari</option>
+                    <option value="Maret">Maret</option>
+                    <option value="April">April</option>
+                    <option value="Mei">Mei</option>
+                    <option value="Juni">Juni</option>
+                    <option value="Juli">Juli</option>
+                    <option value="Agustus">Agustus</option>
+                    <option value="September">September</option>
+                    <option value="Oktober">Oktober</option>
+                    <option value="November">November</option>
+                    <option value="Desember">Desember</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="kategori-filter">Kategori:</label>
+                <select id="kategori-filter">
+                    <option value="">Pilih Kategori</option>
+                    <option value="Expenses">Expenses</option>
+                    <option value="Income">Income</option>
+                    <option value="Savings">Savings</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="item-filter">Item:</label>
+                <select id="item-filter" disabled>
+                    <option value="">Pilih Item</option>
+                </select>
+            </div>
+
+            <div class="amount-display">
+                <div class="amount-label">Jumlah Uang:</div>
+                <input type="text" class="amount-input" placeholder="Rp 0" />
+            </div>
+
+            <button class="submit-button">Submit Data</button>
+        </div>
+        <!-- Akhir konten baru -->
+    </div>
+    <!-- Card Monthly -->
+    <div class="detailed-card">
+      <div class="detailed-card-title">Monthly</div>
+      <div class="detailed-filters">
+        <label>Bulan:
+          <select id="monthly-bulan-filter">
+            <option>Januari</option><option>Februari</option><option>Maret</option><option>April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
+          </select>
+        </label>
+        <label>Kategori:
+          <select id="monthly-kategori-filter">
+            <option value="Semua">Semua</option><option value="Expenses">Expenses</option><option value="Income">Income</option><option value="Savings">Savings</option>
+          </select>
+        </label>
+        <label>Item:
+          <select id="monthly-item-filter">
+            <option value="Semua">Semua</option>
+          </select>
+        </label>
+        <label>View Entries:
+            <select id="view-entries">
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
+                <option value="all">Semua</option>
+            </select>
+        </label>
+        <!-- Tombol Download dan Upload Excel -->
+        <button id="download-excel-btn" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #000000; background: #43a047; color: #fff; font-size: 1rem; cursor: pointer;">Download Excel</button>
+        <input type="file" id="upload-excel-input" accept=".xls,.xlsx" style="display: none;">
+        <button id="upload-excel-btn" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #000000; background: #ff9800; color: #fff; font-size: 1rem; cursor: pointer;">Upload Excel</button>
+        <!-- Tombol Delete Selected -->
+        <button id="delete-selected-btn" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #000000; background: #e53935; color: #fff; font-size: 1rem; cursor: pointer; margin-left: auto;">Delete Selected</button>
+      </div>
+      <div class="detailed-table-container">
+        <table class="detailed-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" /></th>
+              <th>Tanggal</th>
+              <th>Bulan</th>
+              <th>Kategori</th>
+              <th>Item</th>
+              <th>Jumlah Uang</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Card Savings -->
+    <div class="detailed-card">
+      <div class="detailed-card-title">Savings</div>
+      <div class="detailed-table-container">
+        <table class="detailed-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Januari</th><th>Februari</th><th>Maret</th><th>April</th><th>Mei</th><th>Juni</th><th>Juli</th><th>Agustus</th><th>September</th><th>Oktober</th><th>November</th><th>Desember</th><th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot>
+             <tr>
+                 <td><b>Total</b></td>
+                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                 <td></td> <!-- Kolom total keseluruhan -->
+             </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <!-- Card Income -->
+    <div class="detailed-card">
+        <div class="detailed-card-title">Income</div>
+        <div class="detailed-table-container">
+          <table class="detailed-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Januari</th><th>Februari</th><th>Maret</th><th>April</th><th>Mei</th><th>Juni</th><th>Juli</th><th>Agustus</th><th>September</th><th>Oktober</th><th>November</th><th>Desember</th><th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+               <tr>
+                   <td><b>Total</b></td>
+                   <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                   <td></td> <!-- Kolom total keseluruhan -->
+               </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    <!-- Card Expenses -->
+    <div class="detailed-card">
+        <div class="detailed-card-title">Expenses</div>
+        <div class="detailed-table-container">
+          <table class="detailed-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Target Budget</th>
+                <th>Januari</th><th>Februari</th><th>Maret</th><th>April</th><th>Mei</th><th>Juni</th><th>Juli</th><th>Agustus</th><th>September</th><th>Oktober</th><th>November</th><th>Desember</th><th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><b>Total</b></td>
+                    <td></td> <!-- Tambahan untuk kolom Target Budget -->
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    <td></td> <!-- Kolom total keseluruhan -->
+                </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    <!-- Card for Trend Chart -->
+    <div class="detailed-card">
+      <div class="detailed-card-title">Tren Pemasukan dan Pengeluaran</div>
+      <div class="period-tabs-detailed" style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <div class="period-tab-detailed active" data-period="Monthly" data-chart="trend">Monthly</div>
+        <div class="period-tab-detailed" data-period="Weekly" data-chart="trend">Weekly</div>
+        <div class="period-tab-detailed" data-period="Daily" data-chart="trend">Daily</div>
+        <div class="period-tab-detailed" data-period="Yearly" data-chart="trend">Yearly</div>
+      </div>
+      <div class="chart-container" style="position: relative; height:400px; width:100%;">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+    <!-- Card for Category Chart -->
+    <div class="detailed-card">
+      <div class="detailed-card-title">Distribusi Pengeluaran per Kategori</div>
+      <div class="period-tabs-detailed" style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <div class="period-tab-detailed active" data-period="Monthly" data-chart="category">Monthly</div>
+        <div class="period-tab-detailed" data-period="Weekly" data-chart="category">Weekly</div>
+        <div class="period-tab-detailed" data-period="Daily" data-chart="category">Daily</div>
+        <div class="period-tab-detailed" data-period="Yearly" data-chart="category">Yearly</div>
+      </div>
+      <div class="chart-container" style="position: relative; height:400px; width:100%;">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Form (Hidden by default) -->
+  <div id="edit-form-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 100;">
+     <div style="background-color: white; padding: 20px; border-radius: 8px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 101;">
+        <h2>Edit Data</h2>
+         <input type="hidden" id="edit-doc-id">
+         <div class="form-group">
+             <label for="edit-date">Tanggal:</label>
+             <input type="date" id="edit-date">
+         </div>
+         <div class="form-group">
+             <label for="edit-month">Bulan:</label>
+             <select id="edit-month">
+                 <option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
+             </select>
+         </div>
+         <div class="form-group">
+             <label for="edit-category">Kategori:</label>
+             <select id="edit-category">
+                 <option value="Expenses">Expenses</option><option value="Income">Income</option><option value="Savings">Savings</option>
+             </select>
+         </div>
+         <div class="form-group">
+             <label for="edit-item">Item:</label>
+             <input type="text" id="edit-item">
+         </div>
+          <div class="form-group">
+             <label for="edit-amount">Jumlah Uang:</label>
+             <input type="number" id="edit-amount" step="0.01">
+         </div>
+         <div style="margin-top: 20px; text-align: right;">
+             <button id="save-edit-btn" style="margin-right: 10px;">Simpan Perubahan</button>
+             <button id="cancel-edit-btn">Batal</button>
+         </div>
+     </div>
+  </div>
+
+  <!-- 1. Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <!-- 2. File Konfigurasi Firebase -->
+  <script src="config.js"></script>
+
+  <!-- 3. Common Functions -->
+  <script src="common.js"></script>
+
+  <!-- 4. Page Specific Script -->
+  <script src="detailed.js"></script>
+
+  <!-- 5. SheetJS (xlsx) library -->
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+  <!-- 6. Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html> 

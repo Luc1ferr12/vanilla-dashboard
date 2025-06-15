@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debts Page</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="debts.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  </head>
+  <body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <div class="brand-container">
+        <div class="hamburger-menu" id="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-logo">C</div>
+        <div class="brand-name">Cash Budget</div>
+      </div>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button>
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" placeholder="Search..." />
+        </div>
+
+        <div>🔔</div>
+
+        <div class="user-profile">
+          <div class="user-avatar">LCF</div>
+          <div>Fallen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <a class="nav-item" href="index.html">
+        <div class="nav-icon">💰</div>
+        <div class="nav-label">Dashboard</div>
+      </a>
+      <a class="nav-item" href="detailed.html">
+        <div class="nav-icon">📋</div>
+        <div class="nav-label">Detailed</div>
+      </a>
+      <a class="nav-item active" href="debts.html">
+        <div class="nav-icon">😈</div>
+        <div class="nav-label">Debts</div>
+      </a>
+      <a class="nav-item" href="budget_tools.html">
+        <div class="nav-icon">🛠️</div>
+        <div class="nav-label">Budget Tools</div>
+      </a>
+    </div>
+
+    <!-- Main Content for Debts Page -->
+    <div class="main-content">
+      
+      <!-- Debt Summary Cards -->
+      <div class="debt-cards-container">
+        <!-- Total Pinjaman Card -->
+        <div class="debt-card">
+          <div class="debt-card-title">Total Pinjaman</div>
+          <div class="debt-card-value" id="total-loan-value">Rp 0</div>
+          <div class="debt-card-icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+        </div>
+
+        <!-- Bunga Hutang Card -->
+        <div class="debt-card">
+          <div class="debt-card-title">Bunga Hutang</div>
+          <div class="debt-card-value" id="total-interest-value">Rp 0</div>
+          <div class="debt-card-icon">
+            <i class="fas fa-percentage"></i>
+          </div>
+        </div>
+
+        <!-- Total Dibayar Card -->
+        <div class="debt-card">
+          <div class="debt-card-title">Total Dibayar</div>
+          <div class="debt-card-value" id="total-paid-value">Rp 0</div>
+          <div class="debt-card-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+        </div>
+
+        <!-- Sisa Hutang Card -->
+        <div class="debt-card">
+          <div class="debt-card-title">Sisa Hutang</div>
+          <div class="debt-card-value" id="remaining-debt-value">Rp 0</div>
+          <div class="debt-card-icon">
+            <i class="fas fa-balance-scale"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Form Cicilan -->
+      <div class="debt-form-card">
+        <h2 class="debt-form-title">Cicilan</h2>
+        <form id="add-debt-form" class="debt-form">
+          <div class="form-group">
+            <label for="platform">Platform</label>
+            <input type="text" id="platform" name="platform" required>
+          </div>
+
+          <div class="form-group">
+            <label for="loan-amount">Jumlah Hutang</label>
+            <input type="text" id="loan-amount" name="loan-amount" required>
+          </div>
+
+          <div class="form-group">
+            <label for="monthly-payment">Cicilan per Bulan</label>
+            <input type="text" id="monthly-payment" name="monthly-payment" required>
+          </div>
+
+          <div class="form-group">
+            <label for="start-date">Waktu Pengajuan</label>
+            <input type="date" id="start-date" name="start-date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="due-date">Waktu Jatuh Tempo</label>
+            <input type="date" id="due-date" name="due-date" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+              <option value="Belum Lunas">Belum Lunas</option>
+              <option value="Lunas">Lunas</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="total-installments">Total Cicilan</label>
+            <select id="total-installments" name="total-installments" required>
+              <option value="1">1 Bulan</option>
+              <option value="3">3 Bulan</option>
+              <option value="6">6 Bulan</option>
+              <option value="9">9 Bulan</option>
+              <option value="12">12 Bulan</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="paid-installments">Terbayarkan</label>
+            <input type="number" id="paid-installments" name="paid-installments" min="0" required>
+          </div>
+
+          <div class="form-group full-width-grid-item">
+            <label for="note">Note</label>
+            <textarea id="note" name="note" rows="3"></textarea>
+          </div>
+
+          <div class="form-actions full-width-grid-item">
+            <button type="submit" class="submit-button">Simpan</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Debt List Card -->
+      <div class="debt-list-card card">
+        <h3 class="mb-0">Daftar Hutang <span id="highlighted-total-amount" class="text-info" style="font-size: 0.8em;"></span></h3>
+        <br>
+        <!-- Filters -->
+        <div class="debt-filters">
+          <div class="filter-group">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter">
+              <option value="all">Semua</option>
+              <option value="Belum Lunas">Belum Lunas</option>
+              <option value="Lunas">Lunas</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="sort-by">Urutkan:</label>
+            <select id="sort-by">
+              <option value="dueDateAsc" selected>Jatuh Tempo Terdekat</option>
+              <option value="dueDateDesc">Jatuh Tempo Terjauh</option>
+              <option value="loanAmountDesc">Hutang Terbanyak</option>
+              <option value="loanAmountAsc">Hutang Tersedikit</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Debt Table -->
+        <div class="debt-table-container">
+          <table class="debt-table">
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Jumlah Hutang</th>
+                <th>Cicilan per Bulan</th>
+                <th>Progress</th>
+                <th>Jatuh Tempo</th>
+                <th>Waktu Pengajuan</th>
+                <th>Status</th>
+                <th>Note</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data hutang akan dimuat di sini oleh JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      
+      <!-- Upcoming Payments Card -->
+      
+      <!-- Content lainnya akan ditambahkan di sini -->
+      
+    </div>
+
+    <!-- 1. Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- 2. File Konfigurasi Firebase -->
+    <script src="config.js"></script>
+
+    <!-- 3. Common Functions -->
+    <script src="common.js"></script>
+
+    <!-- 4. Page Specific Script -->
+    <script src="debts.js"></script>
+
+    <!-- 5. Upcoming Payments Script -->
+    <!-- Popup Konfirmasi -->
+    <div class="confirmation-popup" id="confirmationPopup">
+      <div class="confirmation-content">
+        <h3>Konfirmasi Pembayaran</h3>
+        <p>Apakah Anda yakin ingin melakukan pembayaran untuk hutang ini?</p>
+        <div class="confirmation-buttons">
+          <button class="confirm-yes" id="confirmYes">Ya</button>
+          <button class="confirm-no" id="confirmNo">Tidak</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Edit Hutang -->
+    <div class="edit-debt-modal" id="editDebtModal">
+      <div class="edit-debt-content">
+        <h3>Edit Hutang</h3>
+        <form id="edit-debt-form">
+          <input type="hidden" id="edit-debt-id">
+          <div class="form-group">
+            <label for="edit-platform">Platform</label>
+            <input type="text" id="edit-platform" name="platform" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-loan-amount">Jumlah Hutang</label>
+            <input type="text" id="edit-loan-amount" name="loan-amount" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-monthly-payment">Cicilan per Bulan</label>
+            <input type="text" id="edit-monthly-payment" name="monthly-payment" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-start-date">Waktu Pengajuan</label>
+            <input type="date" id="edit-start-date" name="start-date" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-due-date">Waktu Jatuh Tempo</label>
+            <input type="date" id="edit-due-date" name="due-date" readonly>
+          </div>
+          <div class="form-group">
+            <label for="edit-status">Status</label>
+            <select id="edit-status" name="status" required>
+              <option value="Belum Lunas">Belum Lunas</option>
+              <option value="Lunas">Lunas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-total-installments">Total Cicilan</label>
+            <select id="edit-total-installments" name="total-installments" required>
+              <option value="1">1 Bulan</option>
+              <option value="3">3 Bulan</option>
+              <option value="6">6 Bulan</option>
+              <option value="9">9 Bulan</option>
+              <option value="12">12 Bulan</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-paid-installments">Terbayarkan</label>
+            <input type="number" id="edit-paid-installments" name="paid-installments" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-note">Note</label>
+            <textarea id="edit-note" name="note" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="submit-button">Simpan</button>
+            <button type="button" class="cancel-button" id="cancel-edit-btn">Batal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html> 
