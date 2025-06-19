@@ -194,8 +194,53 @@
 }
 
 @media (max-width: 600px) {
+  html, body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+  .main-content, .debt-cards-container {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+  }
+  .main-content {
+    padding-top: 160px !important;
+  }
+  .debt-cards-container {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    align-items: flex-start !important;
+  }
+  .debt-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 6px !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 6px !important;
+    min-height: unset !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+  }
+  .debt-card-title {
+    font-size: 0.85rem !important;
+  }
+  .debt-card-value {
+    font-size: 1rem !important;
+  }
   .debt-form {
     grid-template-columns: 1fr;
+  }
+  .debt-card {
+    margin-bottom: 10px !important;
+    padding-bottom: 6px !important;
   }
 }
 
@@ -647,5 +692,84 @@
   
   .debt-filters select {
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .cicilan-card, .debt-form-card, .debt-card, .main-content, .debt-form-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    padding: 10px !important;
+    margin: 0 !important;
+  }
+  .cicilan-form, .debt-form-content, .debt-form-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  .cicilan-form .form-row, .debt-form-content .form-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .cicilan-form input, .cicilan-form select, .debt-form-content input, .debt-form-content select, .debt-form-content textarea {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  .cicilan-form label, .debt-form-content label {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  .cicilan-form button, .debt-form-content button, .debt-form-card button {
+    width: 100% !important;
+    margin-top: 10px !important;
+    font-size: 1.1rem !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+  }
+  .debt-list-card, .debt-table-container {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    box-sizing: border-box;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .debt-list-card .debt-table {
+    min-width: 800px !important;
+    font-size: 13px !important;
+    table-layout: auto !important;
+  }
+  .debt-list-card .debt-table th, .debt-list-card .debt-table td {
+    padding: 8px 6px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    word-break: normal !important;
+  }
+  .debt-table .action-buttons {
+    flex-direction: row !important;
+    gap: 6px !important;
+    width: auto;
+    justify-content: flex-start;
+  }
+  .debt-table .action-buttons button {
+    width: auto !important;
+    min-width: 60px;
+    font-size: 13px !important;
+    padding: 8px 10px !important;
+  }
+  .debt-list-card .debt-table th {
+    position: sticky;
+    top: 0;
+    background: var(--table-header-bg);
+    z-index: 2;
+  }
+  .debt-card {
+    margin-bottom: 10px !important;
+    padding-bottom: 6px !important;
   }
 } 

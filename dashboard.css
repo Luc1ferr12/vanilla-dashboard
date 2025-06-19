@@ -598,4 +598,50 @@
   .goal-section {
     padding: 15px;
   }
+}
+
+@media (max-width: 600px) {
+  .revenue-chart-container {
+    grid-column: span 12 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 0 20px 0 !important;
+    box-sizing: border-box;
+  }
+  .revenue-chart {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .chart-legend, #expense-distribution-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 0.95rem;
+    word-break: break-word;
+  }
+  .chart-legend .legend-item {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .chart-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
 } 
