@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengaturan - Cash Budget</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <div class="brand-container">
+        <div class="hamburger-menu" id="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-logo">C</div>
+        <div class="brand-name">Cash Budget</div>
+      </div>
+
+      <div class="header-actions">
+        <!-- <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button> -->
+        <div>🔔</div>
+
+        <div class="user-profile">
+          <div class="user-avatar">LCF</div>
+          <div>Fallen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <a class="nav-item" href="index.html">
+        <div class="nav-icon">💰</div>
+        <div class="nav-label">Dashboard</div>
+      </a>
+      <a class="nav-item" href="detailed.html">
+        <div class="nav-icon">📋</div>
+        <div class="nav-label">Detailed</div>
+      </a>
+      <a class="nav-item" href="debts.html">
+        <div class="nav-icon">😈</div>
+        <div class="nav-label">Debts</div>
+      </a>
+      <a class="nav-item" href="budget_tools.html">
+        <div class="nav-icon">🛠️</div>
+        <div class="nav-label">Budget Tools</div>
+      </a>
+      <a class="nav-item active" href="settings.html">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Settings</div>
+      </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="settings-container">
+        <div class="settings-header">
+          <h1>Pengaturan</h1>
+          <p>Kustomisasi tampilan dan pengaturan aplikasi</p>
+        </div>
+
+        <div class="settings-grid">
+          <!-- Tema dan Warna -->
+          <div class="settings-card">
+            <h2>Tema dan Warna</h2>
+            <!-- <div class="settings-section">
+              <h3>Mode Tema</h3>
+              <div class="theme-options">
+                <button class="theme-option" data-theme="dark">
+                  <div class="theme-preview dark"></div>
+                  <span>Dark Mode</span>
+                </button>
+                <button class="theme-option" data-theme="light">
+                  <div class="theme-preview light"></div>
+                  <span>Light Mode</span>
+                </button>
+              </div>
+            </div> -->
+
+            <div class="settings-section">
+              <h3>Palet Warna</h3>
+              <div class="color-palettes">
+                <button class="color-palette" data-palette="dark">
+                  <div class="palette-preview dark"></div>
+                  <span>Dark Mode</span>
+                </button>
+                <button class="color-palette" data-palette="pastel1">
+                  <div class="palette-preview pastel1"></div>
+                  <span>Pastel 1</span>
+                </button>
+                <button class="color-palette" data-palette="pastel2">
+                  <div class="palette-preview pastel2"></div>
+                  <span>Pastel 2</span>
+                </button>
+                <button class="color-palette" data-palette="warm1">
+                  <div class="palette-preview warm1"></div>
+                  <span>Warm 1</span>
+                </button>
+                <button class="color-palette" data-palette="nature1">
+                  <div class="palette-preview nature1"></div>
+                  <span>Nature 1</span>
+                </button>
+                <button class="color-palette" data-palette="nature2">
+                  <div class="palette-preview nature2"></div>
+                  <span>Nature 2</span>
+                </button>
+                <button class="color-palette" data-palette="sunset1">
+                  <div class="palette-preview sunset1"></div>
+                  <span>Sunset 1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widget Dashboard -->
+          <div class="settings-card">
+            <h2>Widget Dashboard</h2>
+            <div class="settings-section">
+              <h3>Widget yang Tersedia</h3>
+              <div class="widget-list" id="available-widgets">
+                <div class="widget-item" draggable="true" data-widget="quick-stats">
+                  <div class="widget-icon">📊</div>
+                  <div class="widget-info">
+                    <h4>Quick Stats</h4>
+                    <p>Ringkasan statistik keuangan</p>
+                  </div>
+                </div>
+                <div class="widget-item" draggable="true" data-widget="cash-flow">
+                  <div class="widget-icon">📈</div>
+                  <div class="widget-info">
+                    <h4>Cash Flow</h4>
+                    <p>Grafik aliran kas</p>
+                  </div>
+                </div>
+                <div class="widget-item" draggable="true" data-widget="expense-distribution">
+                  <div class="widget-icon">🍩</div>
+                  <div class="widget-info">
+                    <h4>Distribusi Pengeluaran</h4>
+                    <p>Grafik donut pengeluaran per kategori</p>
+                  </div>
+                </div>
+                <div class="widget-item" draggable="true" data-widget="goals">
+                  <div class="widget-icon">🎯</div>
+                  <div class="widget-info">
+                    <h4>Goals Progress</h4>
+                    <p>Progress tujuan keuangan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Widget Aktif</h3>
+              <div class="widget-list" id="active-widgets">
+                <!-- Active widgets will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- File Konfigurasi Firebase -->
+    <script src="config.js"></script>
+
+    <!-- Common Functions -->
+    <script src="common.js"></script>
+
+    <!-- Settings Script -->
+    <script src="settings.js"></script>
+  </body>
+</html> 

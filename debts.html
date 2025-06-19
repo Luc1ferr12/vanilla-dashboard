@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="common.css" />
     <link rel="stylesheet" href="debts.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <meta name="theme-color" content="#43a047">
   </head>
   <body>
     <!-- Header Bar -->
@@ -26,7 +29,6 @@
       </div>
 
       <div class="header-actions">
-        <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button>
         <div class="search-bar">
           <span>🔍</span>
           <input type="text" placeholder="Search..." />
@@ -58,6 +60,10 @@
       <a class="nav-item" href="budget_tools.html">
         <div class="nav-icon">🛠️</div>
         <div class="nav-label">Budget Tools</div>
+      </a>
+      <a class="nav-item" href="settings.html">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Settings</div>
       </a>
     </div>
 
@@ -306,5 +312,10 @@
         </form>
       </div>
     </div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+      }
+    </script>
   </body>
 </html> 

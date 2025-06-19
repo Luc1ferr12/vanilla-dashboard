@@ -10,6 +10,9 @@
   />
   <link rel="stylesheet" href="common.css" />
   <link rel="stylesheet" href="detailed.css" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <meta name="theme-color" content="#43a047">
 </head>
 <body>
  <!-- Header Bar -->
@@ -25,7 +28,6 @@
     </div>
 
     <div class="header-actions">
-      <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button>
       <div>🔔</div>
 
       <div class="user-profile">
@@ -52,6 +54,10 @@
     <a class="nav-item" href="budget_tools.html">
       <div class="nav-icon">🛠️</div>
       <div class="nav-label">Budget Tools</div>
+    </a>
+    <a class="nav-item" href="settings.html">
+      <div class="nav-icon">⚙️</div>
+      <div class="nav-label">Settings</div>
     </a>
   </div>
   <div class="detailed-main-content">
@@ -113,7 +119,7 @@
     </div>
     <!-- Card Monthly -->
     <div class="detailed-card">
-      <div class="detailed-card-title">Monthly</div>
+      <div class="detailed-card-title">Monthly <span id="monthly-total-amount" style="margin-left: 16px; font-size: 1rem; color: var(--text-color); font-weight: 400;"></span></div>
       <div class="detailed-filters">
         <label>Bulan:
           <select id="monthly-bulan-filter">
@@ -162,6 +168,52 @@
           <tbody>
           </tbody>
         </table>
+      </div>
+    </div>
+    <!-- Form Edit -->
+    <div id="edit-form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000; min-width: 400px; border: 1px solid var(--border-color);">
+      <h2 style="margin-bottom: 20px; color: var(--text-color); font-size: 1.5rem;">Edit Data</h2>
+      <input type="hidden" id="edit-doc-id">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500;">Tanggal:</label>
+        <input type="date" id="edit-date" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-background); color: var(--input-text-color);">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500;">Bulan:</label>
+        <select id="edit-month" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-background); color: var(--input-text-color);">
+          <option value="Januari">Januari</option>
+          <option value="Februari">Februari</option>
+          <option value="Maret">Maret</option>
+          <option value="April">April</option>
+          <option value="Mei">Mei</option>
+          <option value="Juni">Juni</option>
+          <option value="Juli">Juli</option>
+          <option value="Agustus">Agustus</option>
+          <option value="September">September</option>
+          <option value="Oktober">Oktober</option>
+          <option value="November">November</option>
+          <option value="Desember">Desember</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500;">Kategori:</label>
+        <select id="edit-category" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-background); color: var(--input-text-color);">
+          <option value="Expenses">Expenses</option>
+          <option value="Income">Income</option>
+          <option value="Savings">Savings</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500;">Item:</label>
+        <input type="text" id="edit-item" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-background); color: var(--input-text-color);">
+      </div>
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500;">Jumlah:</label>
+        <input type="number" id="edit-amount" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-background); color: var(--input-text-color);">
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button id="save-edit-btn" style="flex: 1; padding: 10px; background: #43a047; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Simpan</button>
+        <button id="cancel-edit-btn" style="flex: 1; padding: 10px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Batal</button>
       </div>
     </div>
     <!-- Card Savings -->
@@ -263,42 +315,6 @@
     </div>
   </div>
 
-  <!-- Edit Form (Hidden by default) -->
-  <div id="edit-form-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 100;">
-     <div style="background-color: white; padding: 20px; border-radius: 8px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 101;">
-        <h2>Edit Data</h2>
-         <input type="hidden" id="edit-doc-id">
-         <div class="form-group">
-             <label for="edit-date">Tanggal:</label>
-             <input type="date" id="edit-date">
-         </div>
-         <div class="form-group">
-             <label for="edit-month">Bulan:</label>
-             <select id="edit-month">
-                 <option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
-             </select>
-         </div>
-         <div class="form-group">
-             <label for="edit-category">Kategori:</label>
-             <select id="edit-category">
-                 <option value="Expenses">Expenses</option><option value="Income">Income</option><option value="Savings">Savings</option>
-             </select>
-         </div>
-         <div class="form-group">
-             <label for="edit-item">Item:</label>
-             <input type="text" id="edit-item">
-         </div>
-          <div class="form-group">
-             <label for="edit-amount">Jumlah Uang:</label>
-             <input type="number" id="edit-amount" step="0.01">
-         </div>
-         <div style="margin-top: 20px; text-align: right;">
-             <button id="save-edit-btn" style="margin-right: 10px;">Simpan Perubahan</button>
-             <button id="cancel-edit-btn">Batal</button>
-         </div>
-     </div>
-  </div>
-
   <!-- 1. Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -317,5 +333,10 @@
 
   <!-- 6. Chart.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
 </body>
 </html> 

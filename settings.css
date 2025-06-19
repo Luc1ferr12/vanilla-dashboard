@@ -1,0 +1,235 @@
+/* Settings Page Styles */
+.settings-header {
+  margin-bottom: 20px;
+}
+
+.settings-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--chart-title-gradient-start), var(--chart-title-gradient-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.settings-header p {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* Settings Container */
+.settings-container {
+  grid-column: span 12;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+/* Settings Grid (contains the cards) */
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  grid-auto-rows: max-content;
+  width: 100%;
+}
+
+/* Settings Card */
+.settings-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px var(--shadow-color);
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.settings-card h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-section {
+  margin-bottom: 25px;
+}
+
+.settings-section h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+
+/* Theme Options */
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.theme-option {
+  background: none;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-option:hover {
+  border-color: var(--button-primary-bg);
+}
+
+.theme-option.active {
+  border-color: var(--button-primary-bg);
+  background-color: var(--button-primary-bg);
+}
+
+.theme-preview {
+  width: 100%;
+  height: 100px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.theme-preview.dark {
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+}
+
+.theme-preview.light {
+  background: linear-gradient(135deg, #ffffff, #f5f5f5);
+}
+
+/* Color Palettes */
+.color-palettes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.color-palette {
+  background: none;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-palette:hover {
+  border-color: var(--button-primary-bg);
+}
+
+.color-palette.active {
+  border-color: var(--button-primary-bg);
+}
+
+.palette-preview {
+  width: 100%;
+  height: 100px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.palette-preview div {
+  flex: 1;
+}
+
+.palette-preview.pastel1 {
+  background: linear-gradient(90deg, #FFF2E0 0%, #C0C9EE 25%, #A2AADB 50%, #898AC4 75%);
+}
+
+.palette-preview.pastel2 {
+  background: linear-gradient(90deg, #819A91 0%, #A7C1A8 25%, #D1D8BE 50%, #EEEFE0 75%);
+}
+
+.palette-preview.warm1 {
+  background: linear-gradient(90deg, #FEF3E2 0%, #F3C623 25%, #FFB22C 50%, #FA812F 75%);
+}
+
+.palette-preview.nature1 {
+  background: linear-gradient(90deg, #FFF1CA 0%, #FFB823 25%, #708A58 50%, #2D4F2B 75%);
+}
+
+.palette-preview.nature2 {
+  background: linear-gradient(90deg, #328E6E 0%, #67AE6E 25%, #90C67C 50%, #E1EEBC 75%);
+}
+
+.palette-preview.sunset1 {
+  background: linear-gradient(90deg, #FFF085 0%, #FCB454 25%, #FF9B17 50%, #F16767 75%);
+}
+
+.palette-preview.dark {
+  background: linear-gradient(45deg, #2c2f33 0%, #36393f 50%, #23272a 100%);
+  border: 2px solid #4f545c;
+}
+
+/* Widgets */
+.widget-list {
+  display: grid;
+  gap: 15px;
+}
+
+.widget-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: var(--input-bg);
+  border-radius: 8px;
+  cursor: move;
+  transition: transform 0.3s;
+}
+
+.widget-item:hover {
+  transform: translateY(-2px);
+}
+
+.widget-icon {
+  font-size: 24px;
+}
+
+.widget-info h4 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.widget-info p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settings-container {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .settings-header {
+    margin-bottom: 15px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .theme-options,
+  .color-palettes {
+    grid-template-columns: 1fr;
+  }
+} 

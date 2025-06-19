@@ -1,10 +1,41 @@
 // detailed.js - Logika khusus untuk halaman detailed.html
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Variabel untuk menyimpan opsi item (akan dimuat dari Firebase)
+    let itemOptions = {}; // Inisialisasi kosong atau dengan default minimal
+
     // Hanya jalankan kode ini jika berada di halaman detailed.html
     const isDetailedPage = window.location.pathname.endsWith('/detailed.html');
 
     if (isDetailedPage) {
+        // Tambahkan fungsi pembantu untuk menunggu Firebase Firestore siap
+        const waitForFirestore = () => {
+            return new Promise(resolve => {
+                const checkDb = () => {
+                    if (window.db) {
+                        resolve();
+                    } else {
+                        setTimeout(checkDb, 50); // Coba lagi setelah 50ms
+                    }
+                };
+                checkDb();
+            });
+        };
+
+        // Tunggu hingga Firestore siap sebelum memuat opsi item
+        await waitForFirestore();
+
+        // Panggil ini di awal untuk memastikan itemOptions dimuat sebelum digunakan oleh elemen lain.
+        itemOptions = await loadItemOptionsFromFirebase();
+
+        // Ambil referensi elemen input cashflow
+        const dateFilter = document.getElementById('date-filter');
+        const inputKategoriFilter = document.getElementById('kategori-filter');
+        const inputItemFilter = document.getElementById('item-filter');
+        const amountInput = document.querySelector('.amount-input');
+        const submitButton = document.querySelector('.submit-button');
+        const monthFilter = document.getElementById('month-filter');
+
         // Global Chart.js configuration for text colors
         // This ensures chart elements adapt to theme changes
         Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-color');
@@ -16,6 +47,64 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (Chart.defaults.plugins && Chart.defaults.plugins.title) {
             Chart.defaults.plugins.title.color = getComputedStyle(document.body).getPropertyValue('--text-color');
+        }
+
+        // Fungsi untuk menyimpan itemOptions ke Firebase
+        async function saveItemsToFirebase(category, itemsArray) {
+            try {
+                // Get Firestore instance explicitly from window.db
+                const firestoreDb = window.db; // Use window.db directly
+                if (!firestoreDb) {
+                    console.error('Firestore instance (window.db) is not available. Cannot save item options.');
+                    alert('Gagal menyimpan item: Firestore tidak tersedia.');
+                    return;
+                }
+                // Gunakan set dengan merge: true agar hanya field 'items' yang diupdate
+                await firestoreDb.collection('categories').doc(category).set({ items: itemsArray }, { merge: true });
+                console.log(`Items for ${category} saved to Firebase.`);
+            } catch (error) {
+                console.error('Error saving items to Firebase:', error.code, error.message);
+                alert('Gagal menyimpan item ke Firebase.');
+            }
+        }
+
+        // Fungsi untuk memuat itemOptions dari Firebase
+        async function loadItemOptionsFromFirebase() {
+            let loadedItemOptions = {
+                Expenses: ["Spinjam", "Traveloka", "Makan", "Kerjaan", "Lain-Lain", "Belanja", "Cashout", "Spaylater", "Netflix",
+                "Kos", "HBO", "Forex", "Makan2 Tim", "Service Motor", "Listrik", "Crypto", "Game"],
+                Income: ["Salary", "Opers", "Insentive", "THR", "Forex", "Crypto", "Project", "Bayaran Utang", "Other"],
+                Savings: ["BluBCA", "Crypto"]
+            }; // Default hardcoded options
+
+            try {
+                // Get Firestore instance explicitly from window.db
+                const firestoreDb = window.db; // Use window.db directly
+                if (!firestoreDb) {
+                    console.warn('Firestore instance (window.db) is not available. Using default item options.');
+                    return loadedItemOptions; // Return defaults if db is not ready
+                }
+
+                const categoriesSnapshot = await firestoreDb.collection('categories').get();
+                if (categoriesSnapshot.empty) {
+                    console.log('No categories found in Firebase. Initializing with default options and saving to Firebase.');
+                    // Simpan default ke Firebase jika koleksi kosong
+                    for (const categoryName in loadedItemOptions) {
+                        await saveItemsToFirebase(categoryName, loadedItemOptions[categoryName]);
+                    }
+                } else {
+                    loadedItemOptions = {}; // Reset sebelum mengisi dari Firebase
+                    categoriesSnapshot.forEach(doc => {
+                        loadedItemOptions[doc.id] = doc.data().items || [];
+                    });
+                    console.log('Item options loaded from Firebase:', loadedItemOptions);
+                }
+            } catch (error) {
+                console.error('Error loading item options from Firebase:', error.code, error.message);
+                alert('Gagal memuat opsi item dari Firebase. Menggunakan opsi default.');
+                // loadedItemOptions sudah berisi nilai default di awal fungsi, jadi tidak perlu di-reset lagi
+            }
+            return loadedItemOptions; // Selalu kembalikan objek itemOptions yang sudah dimuat (atau default)
         }
 
         const monthlyTableBody = document.querySelector('.detailed-card .detailed-table tbody');
@@ -113,15 +202,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Modifikasi fungsi renderMonthlyTable untuk menggunakan filter Item
         function renderMonthlyTable(data) {
+          console.log('renderMonthlyTable called', data);
           const tbody = document.querySelector('.detailed-table tbody');
-          if (!tbody) return;
+          if (!tbody) {
+            console.log('Tbody tidak ditemukan!');
+            return;
+          }
 
           const bulanFilter = document.getElementById('monthly-bulan-filter');
           const kategoriFilter = document.getElementById('monthly-kategori-filter');
           const itemFilter = document.getElementById('monthly-item-filter');
           const viewEntries = document.getElementById('view-entries');
+          const totalAmountSpan = document.getElementById('monthly-total-amount');
 
-          if (!bulanFilter || !kategoriFilter || !itemFilter || !viewEntries) return;
+          if (!bulanFilter || !kategoriFilter || !itemFilter || !viewEntries) {
+            console.log('Filter bulanan/kategori/item/viewEntries tidak ditemukan!');
+            return;
+          }
 
           // Filter data berdasarkan pilihan
           let filteredData = data.filter(item => {
@@ -137,6 +234,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Urutkan data berdasarkan tanggal
           const sortedData = sortDataByDate(filteredData);
+
+          // Hitung total jumlah uang
+          let totalAmount = 0;
+          sortedData.forEach(item => {
+            totalAmount += parseFloat(item.amount) || 0;
+          });
+          if (totalAmountSpan) {
+            totalAmountSpan.textContent = `Total: ${formatRupiah(totalAmount)}`;
+          }
 
           // Render tabel
           tbody.innerHTML = '';
@@ -163,36 +269,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Fungsi untuk menambahkan event listener pada tombol edit dan delete
         function addTableButtonListeners() {
+          console.log('addTableButtonListeners called');
           const editButtons = document.querySelectorAll('.edit-btn');
           const deleteButtons = document.querySelectorAll('.delete-btn');
+          console.log('Jumlah tombol edit:', editButtons.length);
 
           editButtons.forEach(button => {
+            button.onclick = null;
             button.addEventListener('click', function() {
+              console.log('Edit button clicked', this);
               const docId = this.getAttribute('data-id');
               const row = this.closest('tr');
-              const data = {
-                id: docId,
-                date: row.cells[1].textContent,
-                month: row.cells[2].textContent,
-                category: row.cells[3].textContent,
-                item: row.cells[4].textContent,
-                amount: parseFloat(row.cells[5].textContent.replace(/[^\d.-]/g, ''))
-              };
-
+              const cells = row.cells;
+              // Pastikan semua elemen form ada
+              const editFormContainer = document.getElementById('edit-form-container');
+              const editDocIdInput = document.getElementById('edit-doc-id');
+              const editDateInput = document.getElementById('edit-date');
+              const editMonthSelect = document.getElementById('edit-month');
+              const editCategorySelect = document.getElementById('edit-category');
+              const editItemInput = document.getElementById('edit-item');
+              const editAmountInput = document.getElementById('edit-amount');
+              // Tambahkan log untuk setiap elemen
+              console.log('editFormContainer', editFormContainer);
+              console.log('editDocIdInput', editDocIdInput);
+              console.log('editDateInput', editDateInput);
+              console.log('editMonthSelect', editMonthSelect);
+              console.log('editCategorySelect', editCategorySelect);
+              console.log('editItemInput', editItemInput);
+              console.log('editAmountInput', editAmountInput);
+              if (!editFormContainer || !editDocIdInput || !editDateInput || !editMonthSelect || 
+                  !editCategorySelect || !editItemInput || !editAmountInput) {
+                alert('Ada elemen form edit yang tidak ditemukan! Cek console untuk detail.');
+                console.error('Form edit elements not found', {
+                  editFormContainer, editDocIdInput, editDateInput, editMonthSelect, editCategorySelect, editItemInput, editAmountInput
+                });
+                return;
+              }
+              // Bersihkan format Rupiah dari jumlah uang
+              const amountText = cells[5].textContent;
+              const cleanAmount = amountText.replace(/[^\d.-]/g, '');
+              // Format tanggal ke format yang sesuai dengan input type="date"
+              const dateText = cells[1].textContent;
+              const formattedDate = dateText;
               // Isi form edit
-              editDocIdInput.value = data.id;
-              editDateInput.value = data.date;
-              editMonthSelect.value = data.month;
-              editCategorySelect.value = data.category;
-              editItemInput.value = data.item;
-              editAmountInput.value = data.amount;
-
+              editDocIdInput.value = docId;
+              editDateInput.value = formattedDate;
+              editMonthSelect.value = cells[2].textContent;
+              editCategorySelect.value = cells[3].textContent;
+              editItemInput.value = cells[4].textContent;
+              editAmountInput.value = cleanAmount;
               // Tampilkan form
-              editFormContainer.style.display = 'block';
+              editFormContainer.classList.add('active');
             });
           });
 
           deleteButtons.forEach(button => {
+            button.onclick = null;
             button.addEventListener('click', async function() {
               const docId = this.getAttribute('data-id');
               if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
@@ -209,8 +341,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Event listener untuk form edit
-        if (saveEditButton && cancelEditButton) {
+        if (saveEditButton && cancelEditButton && editFormContainer) {
+          saveEditButton.onclick = null;
+          cancelEditButton.onclick = null;
           saveEditButton.addEventListener('click', async function() {
+            const editDocIdInput = document.getElementById('edit-doc-id');
+            const editDateInput = document.getElementById('edit-date');
+            const editMonthSelect = document.getElementById('edit-month');
+            const editCategorySelect = document.getElementById('edit-category');
+            const editItemInput = document.getElementById('edit-item');
+            const editAmountInput = document.getElementById('edit-amount');
+            if (!editDocIdInput || !editDateInput || !editMonthSelect || !editCategorySelect || 
+                !editItemInput || !editAmountInput) {
+              console.error('Form edit elements not found');
+              alert('Terjadi kesalahan: Form edit tidak lengkap');
+              return;
+            }
             const docId = editDocIdInput.value;
             const updatedData = {
               date: editDateInput.value,
@@ -219,19 +365,17 @@ document.addEventListener('DOMContentLoaded', function() {
               item: editItemInput.value,
               amount: parseFloat(editAmountInput.value)
             };
-
             try {
               await db.collection('cashflow').doc(docId).update(updatedData);
-              editFormContainer.style.display = 'none';
+              editFormContainer.classList.remove('active');
               loadAndRenderData(); // Muat ulang data setelah update
             } catch (error) {
               console.error('Error updating document:', error);
               alert('Gagal menyimpan perubahan');
             }
           });
-
           cancelEditButton.addEventListener('click', function() {
-            editFormContainer.style.display = 'none';
+            editFormContainer.classList.remove('active');
           });
         }
 
@@ -662,7 +806,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         targetTableBody.appendChild(itemRow);
                     }
 
-                    const monthIndex = monthColumnIndex[dataItem.month];
+                    // Normalisasi nama bulan
+                    const normalizedMonth = (dataItem.month || '').trim().toLowerCase();
+                    const monthKey = Object.keys(monthColumnIndex).find(
+                        key => key.toLowerCase() === normalizedMonth
+                    );
+                    const monthIndex = monthKey ? monthColumnIndex[monthKey] : undefined;
                     if (monthIndex !== undefined && itemRow.cells.length > monthIndex) {
                         const monthCell = itemRow.cells[monthIndex];
                         // Menimpa nilai bulan dengan jumlah yang diagregasi
@@ -712,7 +861,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     return acc;
                 }, {});
 
-                for (const item in groupedExpenses) {
+                // Hitung total per item untuk sorting
+                const itemTotals = Object.entries(groupedExpenses).map(([item, months]) => {
+                    let total = 0;
+                    for (let i = 1; i <= 12; i++) {
+                        const monthName = Object.keys(monthColumnIndex).find(key => monthColumnIndex[key] === i);
+                        total += months[monthName] || 0;
+                    }
+                    return { item, months, total };
+                });
+
+                // Urutkan dari total terbesar ke terkecil
+                itemTotals.sort((a, b) => b.total - a.total);
+
+                // Render baris sesuai urutan
+                for (const { item, months, total: totalItem } of itemTotals) {
                     const row = expensesTableBody.insertRow();
                     row.insertCell(0).textContent = item;
 
@@ -721,13 +884,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     const targetBudgetCell = row.insertCell(1);
                     targetBudgetCell.textContent = targetBudget > 0 ? formatRupiah(targetBudget) : '-';
                     
-                    let totalItem = 0;
+                    let runningTotal = 0;
                     for (let i = 1; i <= 12; i++) {
                         const monthName = Object.keys(monthColumnIndex).find(key => monthColumnIndex[key] === i);
-                        const amount = groupedExpenses[item][monthName] || 0;
+                        const amount = months[monthName] || 0;
                         const cell = row.insertCell(i + 1);
                         cell.textContent = formatRupiah(amount);
-                        
                         // Tambahkan indikator visual jika pengeluaran bulanan melebihi target budget
                         if (targetBudget > 0 && amount > targetBudget) {
                             cell.style.color = '#e53935'; // Merah untuk pengeluaran yang melebihi target
@@ -736,25 +898,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             cell.style.color = '#43a047'; // Hijau untuk pengeluaran yang masih dalam target
                             cell.innerHTML = `${formatRupiah(amount)} <span style="color: #43a047;">✓</span>`;
                         }
-                        
-                        totalItem += amount;
+                        runningTotal += amount;
                     }
-                    
                     // Tambahkan indikator visual untuk total keseluruhan
                     const totalCell = row.insertCell(14);
-                    totalCell.textContent = formatRupiah(totalItem);
-                    
-                    // Tambahkan indikator visual untuk total keseluruhan
+                    totalCell.textContent = formatRupiah(runningTotal);
                     if (targetBudget > 0) {
                         const monthlyTarget = targetBudget; // Target per bulan
                         const yearlyTarget = monthlyTarget * 12; // Target per tahun
-                        
-                        if (totalItem > yearlyTarget) {
+                        if (runningTotal > yearlyTarget) {
                             totalCell.style.color = '#e53935'; // Merah untuk total yang melebihi target tahunan
-                            totalCell.innerHTML = `${formatRupiah(totalItem)} <span style="color: #e53935;">⚠️</span>`;
+                            totalCell.innerHTML = `${formatRupiah(runningTotal)} <span style="color: #e53935;">⚠️</span>`;
                         } else {
                             totalCell.style.color = '#43a047'; // Hijau untuk total yang masih dalam target tahunan
-                            totalCell.innerHTML = `${formatRupiah(totalItem)} <span style="color: #43a047;">✓</span>`;
+                            totalCell.innerHTML = `${formatRupiah(runningTotal)} <span style="color: #43a047;">✓</span>`;
                         }
                     }
                 }
@@ -792,23 +949,22 @@ document.addEventListener('DOMContentLoaded', function() {
             // Iterasi setiap baris data di tabel untuk total bulanan
             for (let i = 0; i < rows.length; i++) {
                 const cells = rows[i].cells;
-
-                for (let j = 2; j <= 13; j++) {
+                for (let j = 1; j < totalCells.length; j++) {
                     if (cells.length > j) {
                         const cellText = cells[j].textContent;
-                        const cleanCellText = cellText.replace(/^Rp\s*/, '').replace(/\./g, '').replace(',', '.');
+                        const cleanCellText = cellText.replace(/^Rp\s*/, '').replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]+/g, '');
                         const numericValue = parseFloat(cleanCellText) || 0;
                         columnTotals[j] += numericValue;
                     }
                 }
             }
 
-            // Hitung total keseluruhan
+            // Hitung total keseluruhan (kolom terakhir)
             let categoryGrandTotal = 0;
-            for (let i = 2; i <= 13; i++) {
+            for (let i = 1; i < totalCells.length - 1; i++) {
                 categoryGrandTotal += columnTotals[i];
             }
-            columnTotals[14] = categoryGrandTotal;
+            columnTotals[totalCells.length - 1] = categoryGrandTotal;
 
             // Tampilkan total dengan indikator visual
             for (let j = 1; j < totalCells.length; j++) {
@@ -890,29 +1046,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Panggil fungsi untuk memuat data saat halaman dimuat
         loadAndRenderData();
 
-        // Data untuk opsi filter item
-        const itemOptions = {
-          Expenses: [
-            "Kos", "Spaylater", "Spinjam", "Traveloka", "Netflix", "Cashout",
-            "Kerjaan", "Belanja", "Makan", "Bensin", "Service Motor", "Listrik",
-            "Forex", "Crypto", "HBO", "Game", "Ngutangin", "Lain-Lain"
-          ],
-          Income: [
-            "Salary", "Opers", "Insentive", "THR", "Forex", "Crypto", "Project", "Bayaran Utang", "Other"
-          ],
-          Savings: [
-            "BluBCA", "Crypto"
-          ]
-        };
-
-        // Ambil referensi elemen input cashflow
-        const dateFilter = document.getElementById('date-filter');
-        const inputKategoriFilter = document.getElementById('kategori-filter');
-        const inputItemFilter = document.getElementById('item-filter');
-        const amountInput = document.querySelector('.amount-input');
-        const submitButton = document.querySelector('.submit-button');
-        const monthFilter = document.getElementById('month-filter');
-
         // Fungsi untuk menampilkan modal manajemen item
         function showItemManagementModal(category) {
           const modal = document.createElement('div');
@@ -928,7 +1061,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${itemOptions[category].map(item => `
                   <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-color);">
                     <span>${item}</span>
-                    <button onclick="removeItem('${category}', '${item}')" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">Hapus</button>
+                    <button class="remove-item-btn" data-category="${category}" data-item="${item}" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">Hapus</button>
                   </div>
                 `).join('')}
               </div>
@@ -938,18 +1071,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
           document.body.appendChild(modal);
 
+          // Tambahkan event listener untuk tombol hapus setelah modal ditambahkan ke DOM
+          addRemoveItemButtonListeners(category);
+
           // Event listener untuk tombol tambah item
-          document.getElementById('add-item-btn').addEventListener('click', () => {
+          document.getElementById('add-item-btn').addEventListener('click', async () => {
             const newItemInput = document.getElementById('new-item-input');
             const newItem = newItemInput.value.trim();
             
-            if (newItem && !itemOptions[category].includes(newItem)) {
-              itemOptions[category].push(newItem);
-              updateItemsList(category);
-              updateItemFilter(category);
-              newItemInput.value = '';
-            } else if (itemOptions[category].includes(newItem)) {
-              alert('Item sudah ada dalam daftar!');
+            if (newItem) {
+                if (!itemOptions[category].includes(newItem)) {
+                    itemOptions[category].push(newItem);
+                    await saveItemsToFirebase(category, itemOptions[category]); // Simpan ke Firebase
+                    updateItemsList(category);
+                    updateItemFilter(category);
+                    newItemInput.value = '';
+                } else {
+                    alert('Item sudah ada dalam daftar!');
+                }
             }
           });
 
@@ -960,9 +1099,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Fungsi untuk menghapus item
-        function removeItem(category, item) {
+        async function removeItem(category, item) {
           if (confirm(`Apakah Anda yakin ingin menghapus item "${item}"?`)) {
             itemOptions[category] = itemOptions[category].filter(i => i !== item);
+            await saveItemsToFirebase(category, itemOptions[category]); // Simpan ke Firebase
             updateItemsList(category);
             updateItemFilter(category);
           }
@@ -975,10 +1115,23 @@ document.addEventListener('DOMContentLoaded', function() {
             itemsList.innerHTML = itemOptions[category].map(item => `
               <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-color);">
                 <span>${item}</span>
-                <button onclick="removeItem('${category}', '${item}')" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">Hapus</button>
+                <button class="remove-item-btn" data-category="${category}" data-item="${item}" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">Hapus</button>
               </div>
             `).join('');
+            // Panggil fungsi untuk menambahkan event listener setelah daftar item diperbarui
+            addRemoveItemButtonListeners(category);
           }
+        }
+
+        // Fungsi pembantu untuk menambahkan event listener ke tombol hapus
+        function addRemoveItemButtonListeners(category) {
+            const removeButtons = document.querySelectorAll(`#items-list .remove-item-btn[data-category="${category}"]`);
+            removeButtons.forEach(button => {
+                button.addEventListener('click', async function() {
+                    const itemToRemove = this.getAttribute('data-item');
+                    await removeItem(category, itemToRemove);
+                });
+            });
         }
 
         // Fungsi untuk memperbarui filter item
@@ -999,14 +1152,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Modifikasi event listener untuk inputKategoriFilter
         if (inputKategoriFilter && inputItemFilter) {
-          inputKategoriFilter.addEventListener('change', function() {
+          inputKategoriFilter.addEventListener('change', async function() { // Menjadi async
             const selectedCategory = this.value;
+            // itemOptions sekarang seharusnya sudah dimuat di awal DOMContentLoaded
+            // Tidak perlu lagi memuat di sini atau mengecek Object.keys(itemOptions).length === 0
+            // if (Object.keys(itemOptions).length === 0) {
+            //     await loadItemOptionsFromFirebase(); // Muat jika belum
+            // }
+            console.log('Selected Category:', selectedCategory);
+            console.log('Item Options for selected category:', itemOptions[selectedCategory]);
+            console.log('Full itemOptions object after category change:', itemOptions);
+
             if (inputItemFilter) {
               inputItemFilter.innerHTML = '<option value="">Pilih Item</option>';
             }
 
             if (selectedCategory) {
-              if (itemOptions[selectedCategory] && inputItemFilter) {
+              // Periksa apakah itemOptions[selectedCategory] sudah ada dan merupakan array
+              if (Array.isArray(itemOptions[selectedCategory]) && inputItemFilter) {
                 inputItemFilter.disabled = false;
                 itemOptions[selectedCategory].forEach(item => {
                   const option = document.createElement('option');

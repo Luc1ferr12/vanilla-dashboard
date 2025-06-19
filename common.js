@@ -91,38 +91,231 @@ function formatInputWithThousands(numberString) {
     return formattedNumber;
 }
 
-// Theme Toggle Functionality
+// Apply saved theme and palette on load
 document.addEventListener('DOMContentLoaded', function() {
-    const themeToggle = document.getElementById('theme-toggle');
+    applySavedThemeAndPalette();
+
+    // Initialize color palettes on DOMContentLoaded (only attaches click handlers if elements exist)
+    initializeColorPalettes();
+});
+
+// Fungsi untuk mengatur tema (dark/light)
+function setTheme(themeName) {
     const body = document.body;
-
-    // Check for saved theme preference, default to dark if none saved
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      body.classList.remove('dark-mode');
-      if (themeToggle) themeToggle.textContent = '💡';
+    if (themeName === 'dark') {
+        body.classList.add('dark-mode');
     } else {
-      body.classList.add('dark-mode');
-      if (themeToggle) themeToggle.textContent = '🌙';
-      // Set default theme to dark if no preference is saved
-      if (!savedTheme) localStorage.setItem('theme', 'dark');
+        body.classList.remove('dark-mode');
     }
+    localStorage.setItem('theme', themeName);
+}
 
-    // Theme toggle click handler
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          if (body.classList.contains('dark-mode')) {
-            body.classList.remove('dark-mode');
-            themeToggle.textContent = '💡';
-            localStorage.setItem('theme', 'light');
-          } else {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '🌙';
-            localStorage.setItem('theme', 'dark');
-          }
+// Fungsi untuk menerapkan tema dan palet yang disimpan
+function applySavedThemeAndPalette() {
+    console.log('applySavedThemeAndPalette called');
+    const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light theme
+    const savedPalette = localStorage.getItem('colorPalette') || 'default'; // Default to default palette
+
+    setTheme(savedTheme);
+    applyColorPalette(savedPalette);
+
+    // Update active state of palette options (if on settings page)
+    const colorPalettes = document.querySelectorAll('.color-palette');
+    if (colorPalettes.length > 0) {
+        colorPalettes.forEach(palette => {
+            if (palette.dataset.palette === savedPalette) {
+                palette.classList.add('active');
+            } else {
+                palette.classList.remove('active');
+            }
         });
     }
-});
+}
+
+// Fungsi untuk menginisialisasi palet warna
+function initializeColorPalettes() {
+    const colorPalettes = document.querySelectorAll('.color-palette');
+
+    // Color palette click handler (only for settings page where palettes are present)
+    if (colorPalettes.length > 0) {
+        colorPalettes.forEach(palette => {
+            console.log('Attaching click listener to palette:', palette.dataset.palette);
+            palette.addEventListener('click', () => {
+                const paletteName = palette.dataset.palette;
+                console.log('Palette clicked:', paletteName);
+                
+                // Determine the implied theme based on the selected palette
+                let impliedTheme = 'light'; // Default to light
+                if (paletteName === 'dark') { // Only 'dark' palette implies dark theme
+                    impliedTheme = 'dark';
+                }
+                localStorage.setItem('theme', impliedTheme);
+
+                // Save preference for color palette
+                localStorage.setItem('colorPalette', paletteName);
+                
+                // Apply changes
+                applySavedThemeAndPalette();
+
+                // Update active state is handled by applySavedThemeAndPalette
+            });
+        });
+    }
+}
+
+// Fungsi untuk memperbarui skema warna (diubah namanya menjadi applyColorPalette)
+function applyColorPalette(paletteName) {
+    const root = document.documentElement;
+
+    // List all variables that are modified by individual palettes
+    const paletteSpecificVars = [
+        '--bg-color',
+        '--text-color',
+        '--card-bg',
+        '--button-primary-bg',
+        '--button-primary-color',
+        '--chart-title-gradient-start',
+        '--chart-title-gradient-end',
+        '--brand-gradient-start',
+        '--brand-gradient-end',
+        '--sidebar-bg',
+        '--header-bg',
+        '--nav-item-color',
+        '--nav-item-hover-color',
+        '--header-text-color',
+        '--nav-item-active-color'
+    ];
+
+    // Clear previously applied palette specific variables
+    paletteSpecificVars.forEach(v => root.style.removeProperty(v));
+
+    switch(paletteName) {
+        case 'dark':
+            root.style.setProperty('--sidebar-bg', '#23272a');
+            root.style.setProperty('--header-bg', '#23272a');
+            root.style.setProperty('--nav-item-color', '#99aab5');
+            root.style.setProperty('--nav-item-hover-bg', '#40444b');
+            root.style.setProperty('--nav-item-hover-color', '#ffffff');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        case 'pastel1':
+            root.style.setProperty('--bg-color', '#FFF2E0');
+            root.style.setProperty('--text-color', '#4A4A4A');
+            root.style.setProperty('--card-bg', '#FFFFFF');
+            root.style.setProperty('--button-primary-bg', '#898AC4');
+            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--chart-title-gradient-start', '#898AC4');
+            root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
+            root.style.setProperty('--brand-gradient-start', '#898AC4');
+            root.style.setProperty('--brand-gradient-end', '#FFF2E0');
+            root.style.setProperty('--sidebar-bg', '#898AC4');
+            root.style.setProperty('--header-bg', '#898AC4');
+            root.style.setProperty('--nav-item-color', '#ffffff');
+            root.style.setProperty('--nav-item-hover-bg', '#A2AADB');
+            root.style.setProperty('--nav-item-hover-color', 'var(--text-color)');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        case 'pastel2':
+            root.style.setProperty('--bg-color', '#EEEFE0');
+            root.style.setProperty('--text-color', '#4A4A4A');
+            root.style.setProperty('--card-bg', '#FFFFFF');
+            root.style.setProperty('--button-primary-bg', '#A7C1A8');
+            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--chart-title-gradient-start', '#819A91');
+            root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
+            root.style.setProperty('--brand-gradient-start', '#A7C1A8');
+            root.style.setProperty('--brand-gradient-end', '#819A91');
+            root.style.setProperty('--sidebar-bg', '#819A91');
+            root.style.setProperty('--header-bg', '#819A91');
+            root.style.setProperty('--nav-item-color', '#ffffff');
+            root.style.setProperty('--nav-item-hover-bg', '#A7C1A8');
+            root.style.setProperty('--nav-item-hover-color', 'var(--text-color)');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        case 'warm1':
+            root.style.setProperty('--bg-color', '#FEF3E2');
+            root.style.setProperty('--text-color', '#4A4A4A');
+            root.style.setProperty('--card-bg', '#FFFFFF');
+            root.style.setProperty('--button-primary-bg', '#FA812F');
+            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--chart-title-gradient-start', '#FA812F');
+            root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
+            root.style.setProperty('--brand-gradient-start', '#FA812F');
+            root.style.setProperty('--brand-gradient-end', '#FEF3E2');
+            root.style.setProperty('--sidebar-bg', '#FA812F');
+            root.style.setProperty('--header-bg', '#FA812F');
+            root.style.setProperty('--nav-item-color', '#ffffff');
+            root.style.setProperty('--nav-item-hover-bg', '#FFB22C');
+            root.style.setProperty('--nav-item-hover-color', 'var(--text-color)');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        case 'nature1':
+            root.style.setProperty('--bg-color', '#FFF1CA');
+            root.style.setProperty('--text-color', '#4A4A4A');
+            root.style.setProperty('--card-bg', '#FFFFFF');
+            root.style.setProperty('--button-primary-bg', '#708A58');
+            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--chart-title-gradient-start', '#2D4F2B');
+            root.style.setProperty('--chart-title-gradient-end', '#708A58');
+            root.style.setProperty('--brand-gradient-start', '#708A58');
+            root.style.setProperty('--brand-gradient-end', '#FFF1CA');
+            root.style.setProperty('--sidebar-bg', '#2D4F2B');
+            root.style.setProperty('--header-bg', '#2D4F2B');
+            root.style.setProperty('--nav-item-color', '#ffffff');
+            root.style.setProperty('--nav-item-hover-bg', '#708A58');
+            root.style.setProperty('--nav-item-hover-color', 'var(--text-color)');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        case 'nature2':
+            root.style.setProperty('--bg-color', '#E1EEBC');
+            root.style.setProperty('--text-color', '#4A4A4A');
+            root.style.setProperty('--card-bg', '#FFFFFF');
+            root.style.setProperty('--button-primary-bg', '#67AE6E');
+            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--chart-title-gradient-start', '#328E6E');
+            root.style.setProperty('--chart-title-gradient-end', '#67AE6E');
+            root.style.setProperty('--brand-gradient-start', '#67AE6E');
+            root.style.setProperty('--brand-gradient-end', '#E1EEBC');
+            root.style.setProperty('--sidebar-bg', '#328E6E');
+            root.style.setProperty('--header-bg', '#328E6E');
+            root.style.setProperty('--nav-item-color', '#ffffff');
+            root.style.setProperty('--nav-item-hover-bg', '#67AE6E');
+            root.style.setProperty('--nav-item-hover-color', 'var(--text-color)');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        case 'sunset1':
+            root.style.setProperty('--bg-color', '#FFF085');
+            root.style.setProperty('--text-color', '#4A4A4A');
+            root.style.setProperty('--card-bg', '#FFFFFF');
+            root.style.setProperty('--button-primary-bg', '#FF9B17');
+            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--chart-title-gradient-start', '#F16767');
+            root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
+            root.style.setProperty('--brand-gradient-start', '#FF9B17');
+            root.style.setProperty('--brand-gradient-end', '#FFF085');
+            root.style.setProperty('--sidebar-bg', '#F16767');
+            root.style.setProperty('--header-bg', '#F16767');
+            root.style.setProperty('--nav-item-color', '#ffffff');
+            root.style.setProperty('--nav-item-hover-bg', '#FCB454');
+            root.style.setProperty('--nav-item-hover-color', 'var(--text-color)');
+            root.style.setProperty('--header-text-color', '#ffffff');
+            root.style.setProperty('--nav-item-active-color', '#ffffff');
+            break;
+        default:
+            root.style.setProperty('--nav-item-color', '#8a94a6');
+            root.style.setProperty('--nav-item-hover-bg', '#f0f5ff');
+            root.style.setProperty('--nav-item-hover-color', 'var(--button-primary-bg)');
+            root.style.setProperty('--header-text-color', '#1a2542');
+            root.style.setProperty('--nav-item-active-color', 'var(--button-primary-color)');
+            break;
+    }
+}
 
 // Hamburger Menu Functionality
 document.addEventListener('DOMContentLoaded', function() {
