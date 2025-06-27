@@ -412,13 +412,14 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--nav-item-hover-color', '#ffffff');
             root.style.setProperty('--header-text-color', '#ffffff');
             root.style.setProperty('--nav-item-active-color', '#ffffff');
+            root.style.setProperty('--button-primary-color', 'white');
             break;
         case 'pastel1':
             root.style.setProperty('--bg-color', '#FFF2E0');
             root.style.setProperty('--text-color', '#4A4A4A');
             root.style.setProperty('--card-bg', '#FFFFFF');
             root.style.setProperty('--button-primary-bg', '#898AC4');
-            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             root.style.setProperty('--chart-title-gradient-start', '#898AC4');
             root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
             root.style.setProperty('--brand-gradient-start', '#898AC4');
@@ -436,7 +437,7 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--text-color', '#4A4A4A');
             root.style.setProperty('--card-bg', '#FFFFFF');
             root.style.setProperty('--button-primary-bg', '#A7C1A8');
-            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             root.style.setProperty('--chart-title-gradient-start', '#819A91');
             root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
             root.style.setProperty('--brand-gradient-start', '#A7C1A8');
@@ -454,7 +455,7 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--text-color', '#4A4A4A');
             root.style.setProperty('--card-bg', '#FFFFFF');
             root.style.setProperty('--button-primary-bg', '#FA812F');
-            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             root.style.setProperty('--chart-title-gradient-start', '#FA812F');
             root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
             root.style.setProperty('--brand-gradient-start', '#FA812F');
@@ -472,7 +473,7 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--text-color', '#4A4A4A');
             root.style.setProperty('--card-bg', '#FFFFFF');
             root.style.setProperty('--button-primary-bg', '#708A58');
-            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             root.style.setProperty('--chart-title-gradient-start', '#2D4F2B');
             root.style.setProperty('--chart-title-gradient-end', '#708A58');
             root.style.setProperty('--brand-gradient-start', '#708A58');
@@ -490,7 +491,7 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--text-color', '#4A4A4A');
             root.style.setProperty('--card-bg', '#FFFFFF');
             root.style.setProperty('--button-primary-bg', '#67AE6E');
-            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             root.style.setProperty('--chart-title-gradient-start', '#328E6E');
             root.style.setProperty('--chart-title-gradient-end', '#67AE6E');
             root.style.setProperty('--brand-gradient-start', '#67AE6E');
@@ -508,7 +509,7 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--text-color', '#4A4A4A');
             root.style.setProperty('--card-bg', '#FFFFFF');
             root.style.setProperty('--button-primary-bg', '#FF9B17');
-            root.style.setProperty('--button-primary-color', 'white');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             root.style.setProperty('--chart-title-gradient-start', '#F16767');
             root.style.setProperty('--chart-title-gradient-end', '#4A4A4A');
             root.style.setProperty('--brand-gradient-start', '#FF9B17');
@@ -527,6 +528,7 @@ function applyColorPalette(paletteName) {
             root.style.setProperty('--nav-item-hover-color', 'var(--button-primary-bg)');
             root.style.setProperty('--header-text-color', '#1a2542');
             root.style.setProperty('--nav-item-active-color', 'var(--button-primary-color)');
+            root.style.setProperty('--button-primary-color', '#4A4A4A');
             break;
     }
 }
