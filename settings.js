@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inisialisasi komponen
     // initializeThemeSettings(); // Dihapus karena dikelola oleh common.js
     // initializeCategories(); // Dihapus karena fitur dipindahkan ke detailed.js
-    initializeWidgets();
+    initializeAccountForm();
+    initializePreferencesForm();
+    updateWelcomeUser();
 
     // Debugging: Periksa warna judul di dark mode
     const themeCardTitle = document.querySelector('.settings-card h2');
@@ -18,65 +20,155 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Fungsi untuk menginisialisasi widget
-function initializeWidgets() {
-    const availableWidgets = document.getElementById('available-widgets');
-    const activeWidgets = document.getElementById('active-widgets');
-    const savedWidgets = JSON.parse(localStorage.getItem('activeWidgets')) || [];
+// Fungsi untuk menginisialisasi form account information
+function initializeAccountForm() {
+    const accountForm = document.getElementById('accountForm');
+    const displayNameInput = document.getElementById('displayName');
+    const emailInput = document.getElementById('email');
+    const locationSelect = document.getElementById('location');
 
-    // Load saved widget order
-    savedWidgets.forEach(widgetId => {
-        const widget = availableWidgets.querySelector(`[data-widget="${widgetId}"]`);
-        if (widget) {
-            activeWidgets.appendChild(widget.cloneNode(true));
+    // Check authentication status dan isi form
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            // Isi email (readonly)
+            emailInput.value = user.email;
+            
+            // Isi display name dari user atau dari localStorage
+            const savedDisplayName = localStorage.getItem('userDisplayName');
+            displayNameInput.value = user.displayName || savedDisplayName || '';
+            
+            // Isi location dari localStorage atau default ke Indonesia
+            const savedLocation = localStorage.getItem('userLocation');
+            locationSelect.value = savedLocation || 'ID';
         }
     });
 
-    // Make widgets draggable
-    const widgets = document.querySelectorAll('.widget-item');
-    widgets.forEach(widget => {
-        widget.addEventListener('dragstart', handleDragStart);
-        widget.addEventListener('dragend', handleDragEnd);
-    });
-
-    // Setup drop zones
-    [availableWidgets, activeWidgets].forEach(container => {
-        container.addEventListener('dragover', handleDragOver);
-        container.addEventListener('drop', handleDrop);
-    });
-}
-
-// Drag and Drop Handlers
-function handleDragStart(e) {
-    e.target.classList.add('dragging');
-    e.dataTransfer.setData('text/plain', e.target.dataset.widget);
-}
-
-function handleDragEnd(e) {
-    e.target.classList.remove('dragging');
-}
-
-function handleDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    const widgetId = e.dataTransfer.getData('text/plain');
-    const widget = document.querySelector(`[data-widget="${widgetId}"]`);
-    const sourceContainer = widget.parentNode;
-    const targetContainer = e.currentTarget;
-
-    if (sourceContainer !== targetContainer) {
-        targetContainer.appendChild(widget);
-        saveWidgetOrder();
+    // Handle form submission
+    if (accountForm) {
+        accountForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const displayName = displayNameInput.value.trim();
+            const location = locationSelect.value;
+            
+            // Validasi
+            if (!displayName) {
+                showNotification('Nama tampilan tidak boleh kosong', 'error');
+                return;
+            }
+            
+            // Simpan ke localStorage
+            localStorage.setItem('userDisplayName', displayName);
+            localStorage.setItem('userLocation', location);
+            
+            // Update display name di Firebase (jika user terautentikasi)
+            const user = firebase.auth().currentUser;
+            if (user) {
+                user.updateProfile({
+                    displayName: displayName
+                }).then(() => {
+                    showNotification('Informasi akun berhasil disimpan!', 'success');
+                    
+                    // Update tampilan header
+                    const userName = document.getElementById('userName');
+                    if (userName) {
+                        userName.textContent = displayName;
+                    }
+                    
+                    // Update avatar jika menggunakan inisial
+                    const userAvatar = document.getElementById('userAvatar');
+                    if (userAvatar && !user.photoURL) {
+                        userAvatar.textContent = displayName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    }
+                }).catch((error) => {
+                    console.error('Error updating profile:', error);
+                    showNotification('Gagal menyimpan ke server, tetapi data tersimpan lokal', 'warning');
+                });
+            } else {
+                showNotification('Informasi akun berhasil disimpan!', 'success');
+            }
+        });
     }
 }
 
-// Fungsi untuk menyimpan urutan widget
-function saveWidgetOrder() {
-    const activeWidgets = Array.from(document.getElementById('active-widgets').children)
-        .map(widget => widget.dataset.widget);
-    localStorage.setItem('activeWidgets', JSON.stringify(activeWidgets));
+function initializePreferencesForm() {
+    const preferencesForm = document.getElementById('preferencesForm');
+    const currencySelect = document.getElementById('currency');
+    const languageSelect = document.getElementById('language');
+
+    // Load saved preferences from localStorage
+    const savedCurrency = localStorage.getItem('appCurrency') || 'IDR';
+    const savedLanguage = localStorage.getItem('appLanguage') || 'en';
+    if (currencySelect) currencySelect.value = savedCurrency;
+    if (languageSelect) languageSelect.value = savedLanguage;
+
+    if (preferencesForm) {
+        preferencesForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const currency = currencySelect.value;
+            const language = languageSelect.value;
+            localStorage.setItem('appCurrency', currency);
+            localStorage.setItem('appLanguage', language);
+            setLanguage(language);
+            showNotification('Preferences saved!', 'success');
+        });
+        if (languageSelect) {
+            languageSelect.addEventListener('change', function() {
+                setLanguage(this.value);
+            });
+        }
+    }
+}
+
+function updateWelcomeUser() {
+    const welcomeUser = document.getElementById('welcomeUser');
+    if (!welcomeUser) return;
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            const savedDisplayName = localStorage.getItem('userDisplayName');
+            const displayName = user.displayName || savedDisplayName || user.email.split('@')[0];
+            welcomeUser.textContent = `Welcome, ${displayName}`;
+        } else {
+            welcomeUser.textContent = 'Welcome, Guest';
+        }
+    });
+}
+
+// Fungsi untuk menampilkan notifikasi
+function showNotification(message, type = 'info') {
+    // Buat elemen notifikasi
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="bx ${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Tambahkan ke body
+    document.body.appendChild(notification);
+    
+    // Tampilkan dengan animasi
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Hapus setelah 3 detik
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Fungsi untuk mendapatkan icon notifikasi
+function getNotificationIcon(type) {
+    switch (type) {
+        case 'success': return 'bx-check-circle';
+        case 'error': return 'bx-x-circle';
+        case 'warning': return 'bx-error';
+        default: return 'bx-info-circle';
+    }
 } 

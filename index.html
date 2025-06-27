@@ -28,12 +28,7 @@
       </div>
 
       <div class="header-actions">
-        <div>🔔</div>
-
-        <div class="user-profile">
-          <div class="user-avatar">LCF</div>
-          <div>Fallen</div>
-        </div>
+        <div class="welcome-user" id="welcomeUser">Welcome, </div>
       </div>
     </div>
 
@@ -41,24 +36,27 @@
     <div class="sidebar" id="sidebar">
       <a class="nav-item" href="index.html">
         <div class="nav-icon">💰</div>
-        <div class="nav-label">Dashboard</div>
+        <div class="nav-label" data-i18n="sidebar_dashboard">Dashboard</div>
       </a>
-      <a class="nav-item active" href="detailed.html">
+      <a class="nav-item" href="detailed.html">
         <div class="nav-icon">📋</div>
-        <div class="nav-label">Detailed</div>
+        <div class="nav-label" data-i18n="sidebar_detailed">Detailed</div>
       </a>
       <a class="nav-item" href="debts.html">
         <div class="nav-icon">😈</div>
-        <div class="nav-label">Debts</div>
+        <div class="nav-label" data-i18n="sidebar_debts">Debts</div>
       </a>
       <a class="nav-item" href="budget_tools.html">
         <div class="nav-icon">🛠️</div>
-        <div class="nav-label">Budget Tools</div>
+        <div class="nav-label" data-i18n="sidebar_budget_tools">Budget Tools</div>
       </a>
       <a class="nav-item" href="settings.html">
         <div class="nav-icon">⚙️</div>
-        <div class="nav-label">Settings</div>
+        <div class="nav-label" data-i18n="sidebar_settings">Settings</div>
       </a>
+      <button id="logoutBtn" class="logout-btn sidebar-logout" style="width: 80%; margin: 30px auto 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="bx bx-log-out"></i> <span data-i18n="logout">Logout</span>
+      </button>
     </div>
 
     <!-- Main Content -->
@@ -66,8 +64,8 @@
       <!-- Dashboard Header -->
       <div class="dashboard-header">
         <div>
-          <h1 class="dashboard-title">Budget Analytics</h1>
-          <p class="dashboard-subtitle">
+          <h1 class="dashboard-title" data-i18n="dashboard_title">Budget Analytics</h1>
+          <p class="dashboard-subtitle" data-i18n="dashboard_subtitle">
             Track your budget performance and sales metrics
           </p>
         </div>
@@ -102,42 +100,42 @@
         <div class="quick-stats">
           <div class="stat-card">
             <div class="stat-icon blue-gradient">💵</div>
-            <div class="stat-title">Total Savings</div>
+            <div class="stat-title" data-i18n="stat_total_savings">Total Savings</div>
             <div class="stat-value" id="total-savings-value">175</div>
-            <div class="stat-badge badge-blue" id="savings-percentage">+30 New Additions</div>
+            <div class="stat-badge badge-blue" id="savings-percentage" data-i18n="stat_badge_savings">+30 New Additions</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-icon purple-gradient">📈</div>
-            <div class="stat-title">Total Income</div>
+            <div class="stat-title" data-i18n="stat_total_income">Total Income</div>
             <div class="stat-value" id="total-income-value">12,500</div>
             <!-- <div class="stat-badge badge-purple">75% Completed</div> -->
           </div>
 
           <div class="stat-card">
             <div class="stat-icon green-gradient">📉</div>
-            <div class="stat-title">Total Expenses</div>
+            <div class="stat-title" data-i18n="stat_total_expenses">Total Expenses</div>
             <div class="stat-value" id="total-expenses-value">$3,250.00</div>
             <!-- <div class="stat-badge badge-green">+82% vs Last Month</div> -->
           </div>
 
           <div class="stat-card">
             <div class="stat-icon orange-gradient">⚖️</div>
-            <div class="stat-title">Balance</div>
+            <div class="stat-title" data-i18n="stat_balance">Balance</div>
             <div class="stat-value" id="balance-value">$42,500</div>
-            <div class="stat-badge badge-orange" id="balance-growth-rate">+5.2% Growth Rate</div>
+            <div class="stat-badge badge-orange" id="balance-growth-rate" data-i18n="stat_badge_balance">+5.2% Growth Rate</div>
           </div>
         </div>
 
         <!-- Revenue Chart -->
         <div class="revenue-chart-container">
           <div class="chart-header">
-            <div class="chart-title">Cash Flow</div>
+            <div class="chart-title" data-i18n="cash_flow">Cash Flow</div>
             <div class="period-tabs">
-              <div class="period-tab">Daily</div>
-              <div class="period-tab">Weekly</div>
-              <div class="period-tab active">Monthly</div>
-              <div class="period-tab">Yearly</div>
+              <div class="period-tab" data-i18n="daily">Daily</div>
+              <div class="period-tab" data-i18n="weekly">Weekly</div>
+              <div class="period-tab active" data-i18n="monthly">Monthly</div>
+              <div class="period-tab" data-i18n="yearly">Yearly</div>
             </div>
           </div>
 
@@ -164,7 +162,7 @@
         <!-- New Card: Expense Distribution by Category -->
         <div class="revenue-chart-container" style="grid-column: span 4;">
             <div class="chart-header">
-                <div class="chart-title">Distribusi Pengeluaran per Kategori</div>
+                <div class="chart-title" data-i18n="expense_distribution_by_category">Distribusi Pengeluaran per Kategori</div>
             </div>
             <div class="revenue-chart">
                 <canvas id="expenseDistributionChart"></canvas>
@@ -177,12 +175,12 @@
         <!-- Performance & Goals Section -->
         <div class="performance-container" style="grid-column: span 12;">
             <div class="chart-header">
-                <div class="chart-title">Performance & Goals</div>
+                <div class="chart-title" data-i18n="performance_goals">Performance & Goals</div>
             </div>
             <div class="goals-grid">
                 <!-- Target Budget Progress -->
                 <div class="goal-section">
-                    <h3>Target Budget Progress</h3>
+                    <h3 data-i18n="target_budget_progress">Target Budget Progress</h3>
                     <div id="budget-targets-container">
                         <!-- Budget targets will be populated here -->
                     </div>
@@ -190,7 +188,7 @@
 
                 <!-- Long Term Goals Progress -->
                 <div class="goal-section">
-                    <h3>Long Term Goals Progress</h3>
+                    <h3 data-i18n="long_term_goals_progress">Long Term Goals Progress</h3>
                     <div id="long-term-goals-container">
                         <!-- Long term goals will be populated here -->
                     </div>
@@ -198,7 +196,7 @@
 
                 <!-- Sinking Fund Progress -->
                 <div class="goal-section">
-                    <h3>Sinking Fund Progress</h3>
+                    <h3 data-i18n="sinking_fund_progress">Sinking Fund Progress</h3>
                     <div id="sinking-funds-container">
                         <!-- Sinking funds will be populated here -->
                     </div>
@@ -214,11 +212,56 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
     <!-- 2. File Konfigurasi Firebase -->
     <script src="config.js"></script>
 
-    <!-- 3. Common Functions -->
+    <!-- 3. Authentication Script -->
+    <script>
+      // Check authentication status
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in
+          console.log('User is signed in:', user.email);
+          
+          // Update user profile display
+          const userAvatar = document.getElementById('userAvatar');
+          const userName = document.getElementById('userName');
+          // Sidebar logout only
+          const logoutBtn = document.getElementById('logoutBtn');
+          
+          // Set user avatar (initials or photo)
+          if (user.photoURL) {
+            userAvatar.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+          } else {
+            userAvatar.textContent = user.displayName ? 
+              user.displayName.split(' ').map(n => n[0]).join('').toUpperCase() : 
+              user.email.split('@')[0].toUpperCase();
+          }
+          
+          // Set user name
+          userName.textContent = user.displayName || user.email.split('@')[0];
+          
+          // Add logout functionality (sidebar only)
+          if (logoutBtn) {
+            logoutBtn.onclick = function() {
+              firebase.auth().signOut().then(() => {
+                window.location.href = 'login.html';
+              }).catch((error) => {
+                console.error('Logout error:', error);
+              });
+            };
+          }
+        } else {
+          // User is signed out, redirect to login
+          console.log('User is signed out');
+          window.location.href = 'login.html';
+        }
+      });
+    </script>
+
+    <!-- 4. Common Functions -->
     <script src="common.js"></script>
 
     <!-- 4. Chart.js Library -->

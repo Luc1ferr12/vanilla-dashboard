@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
         console.log(`Respons simple/price untuk ${coinId}:`, data);
         const price = data[coinId]?.usd || 0;
-        priceDisplayElement.textContent = formatRupiah(price * formatRupiah.conversionRate);
+        priceDisplayElement.textContent = formatCurrency(price * formatRupiah.conversionRate);
         console.log(`Harga saat ini untuk ${coinId}:`, priceDisplayElement.textContent);
 
     } catch (error) {
@@ -497,9 +497,9 @@ document.addEventListener('DOMContentLoaded', () => {
       cryptoGoldProfitLossDisplay.style.display = 'block';
     }
 
-    finalAmountDisplay.textContent = formatRupiah(finalAmount);
-    profitLossAmountDisplay.textContent = formatRupiah(totalInterestOrProfitLoss);
-    totalInterestDisplay.textContent = formatRupiah(totalInterestOrProfitLoss);
+    finalAmountDisplay.textContent = formatCurrency(finalAmount);
+    profitLossAmountDisplay.textContent = formatCurrency(totalInterestOrProfitLoss);
+    totalInterestDisplay.textContent = formatCurrency(totalInterestOrProfitLoss);
   });
 
   // Fungsi untuk memuat dan menampilkan sinking fund dari Firestore
@@ -886,4 +886,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Panggil fungsi untuk memuat data saat halaman dimuat
   loadLongTermGoals();
   loadSinkingFunds();
-}); 
+
+  updateWelcomeUser();
+});
+
+function updateWelcomeUser() {
+  const welcomeUser = document.getElementById('welcomeUser');
+  if (!welcomeUser) return;
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      const savedDisplayName = localStorage.getItem('userDisplayName');
+      const displayName = user.displayName || savedDisplayName || user.email.split('@')[0];
+      welcomeUser.textContent = `Welcome, ${displayName}`;
+    } else {
+      welcomeUser.textContent = 'Welcome, Guest';
+    }
+  });
+} 

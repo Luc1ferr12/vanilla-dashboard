@@ -26,12 +26,8 @@
 
       <div class="header-actions">
         <!-- <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light and dark theme">💡</button> -->
-        <div>🔔</div>
 
-        <div class="user-profile">
-          <div class="user-avatar">LCF</div>
-          <div>Fallen</div>
-        </div>
+        <div class="welcome-user" id="welcomeUser">Welcome, </div>
       </div>
     </div>
 
@@ -57,20 +53,131 @@
         <div class="nav-icon">⚙️</div>
         <div class="nav-label">Settings</div>
       </a>
+      <button id="logoutBtn" class="logout-btn sidebar-logout" style="width: 80%; margin: 30px auto 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="bx bx-log-out"></i> Logout
+      </button>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="settings-container">
         <div class="settings-header">
-          <h1>Pengaturan</h1>
-          <p>Kustomisasi tampilan dan pengaturan aplikasi</p>
+          <h1 data-i18n="settings_title">Pengaturan</h1>
+          <p data-i18n="settings_subtitle">Kustomisasi tampilan dan pengaturan aplikasi</p>
         </div>
 
         <div class="settings-grid">
+          <!-- Account Information -->
+          <div class="settings-card">
+            <h2 data-i18n="account_info">Informasi Akun</h2>
+            <div class="settings-section">
+              <form id="accountForm" class="account-form">
+                <div class="form-group">
+                  <label for="displayName" data-i18n="display_name">Nama Tampilan</label>
+                  <input type="text" id="displayName" name="displayName" data-i18n-placeholder="display_name_placeholder" placeholder="Masukkan nama tampilan" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="email" data-i18n="email">Email</label>
+                  <input type="email" id="email" name="email" readonly data-i18n-placeholder="email_placeholder" placeholder="Email Google Anda">
+                  <small class="form-help" data-i18n="email_help">Email tidak dapat diubah karena terhubung dengan Google</small>
+                </div>
+                
+                <div class="form-group">
+                  <label for="location" data-i18n="location">Lokasi</label>
+                  <select id="location" name="location" required>
+                    <option value="ID" data-i18n="country_id">Indonesia</option>
+                    <option value="MY" data-i18n="country_my">Malaysia</option>
+                    <option value="SG" data-i18n="country_sg">Singapore</option>
+                    <option value="TH" data-i18n="country_th">Thailand</option>
+                    <option value="PH" data-i18n="country_ph">Philippines</option>
+                    <option value="VN" data-i18n="country_vn">Vietnam</option>
+                    <option value="AU" data-i18n="country_au">Australia</option>
+                    <option value="US" data-i18n="country_us">United States</option>
+                    <option value="GB" data-i18n="country_gb">United Kingdom</option>
+                    <option value="CA" data-i18n="country_ca">Canada</option>
+                    <option value="JP" data-i18n="country_jp">Japan</option>
+                    <option value="KR" data-i18n="country_kr">South Korea</option>
+                    <option value="CN" data-i18n="country_cn">China</option>
+                    <option value="IN" data-i18n="country_in">India</option>
+                    <option value="DE" data-i18n="country_de">Germany</option>
+                    <option value="FR" data-i18n="country_fr">France</option>
+                    <option value="IT" data-i18n="country_it">Italy</option>
+                    <option value="ES" data-i18n="country_es">Spain</option>
+                    <option value="NL" data-i18n="country_nl">Netherlands</option>
+                    <option value="BR" data-i18n="country_br">Brazil</option>
+                    <option value="MX" data-i18n="country_mx">Mexico</option>
+                    <option value="AR" data-i18n="country_ar">Argentina</option>
+                    <option value="ZA" data-i18n="country_za">South Africa</option>
+                    <option value="EG" data-i18n="country_eg">Egypt</option>
+                    <option value="NG" data-i18n="country_ng">Nigeria</option>
+                    <option value="KE" data-i18n="country_ke">Kenya</option>
+                    <option value="RU" data-i18n="country_ru">Russia</option>
+                    <option value="TR" data-i18n="country_tr">Turkey</option>
+                    <option value="SA" data-i18n="country_sa">Saudi Arabia</option>
+                    <option value="AE" data-i18n="country_ae">United Arab Emirates</option>
+                    <option value="IL" data-i18n="country_il">Israel</option>
+                    <option value="IR" data-i18n="country_ir">Iran</option>
+                    <option value="PK" data-i18n="country_pk">Pakistan</option>
+                    <option value="BD" data-i18n="country_bd">Bangladesh</option>
+                    <option value="LK" data-i18n="country_lk">Sri Lanka</option>
+                    <option value="NP" data-i18n="country_np">Nepal</option>
+                    <option value="MM" data-i18n="country_mm">Myanmar</option>
+                    <option value="KH" data-i18n="country_kh">Cambodia</option>
+                    <option value="LA" data-i18n="country_la">Laos</option>
+                    <option value="BN" data-i18n="country_bn">Brunei</option>
+                    <option value="TL" data-i18n="country_tl">Timor-Leste</option>
+                    <option value="PG" data-i18n="country_pg">Papua New Guinea</option>
+                    <option value="FJ" data-i18n="country_fj">Fiji</option>
+                    <option value="NZ" data-i18n="country_nz">New Zealand</option>
+                    <option value="OTHER" data-i18n="country_other">Lainnya</option>
+                  </select>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="save-button"><i class="bx bx-save"></i> <span data-i18n="save_changes">Simpan Perubahan</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- App Preferences -->
+          <div class="settings-card">
+            <h2 data-i18n="app_preferences">App Preferences</h2>
+            <div class="settings-section">
+              <form id="preferencesForm" class="preferences-form">
+                <div class="form-group">
+                  <label for="currency" data-i18n="currency">Currency</label>
+                  <select id="currency" name="currency" required>
+                    <option value="IDR">IDR - Indonesian Rupiah</option>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="SGD">SGD - Singapore Dollar</option>
+                    <option value="AUD">AUD - Australian Dollar</option>
+                    <option value="MYR">MYR - Malaysian Ringgit</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="KRW">KRW - South Korean Won</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="CNY">CNY - Chinese Yuan</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="language" data-i18n="language">Language</label>
+                  <select id="language" name="language" required>
+                    <option value="en">English</option>
+                    <option value="id">Indonesia</option>
+                  </select>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="save-button"><i class="bx bx-save"></i> <span data-i18n="save_preferences">Save Preferences</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+
           <!-- Tema dan Warna -->
           <div class="settings-card">
-            <h2>Tema dan Warna</h2>
+            <h2 data-i18n="theme_and_color">Tema dan Warna</h2>
             <!-- <div class="settings-section">
               <h3>Mode Tema</h3>
               <div class="theme-options">
@@ -86,7 +193,7 @@
             </div> -->
 
             <div class="settings-section">
-              <h3>Palet Warna</h3>
+              <h3 data-i18n="color_palette">Palet Warna</h3>
               <div class="color-palettes">
                 <button class="color-palette" data-palette="dark">
                   <div class="palette-preview dark"></div>
@@ -119,51 +226,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Widget Dashboard -->
-          <div class="settings-card">
-            <h2>Widget Dashboard</h2>
-            <div class="settings-section">
-              <h3>Widget yang Tersedia</h3>
-              <div class="widget-list" id="available-widgets">
-                <div class="widget-item" draggable="true" data-widget="quick-stats">
-                  <div class="widget-icon">📊</div>
-                  <div class="widget-info">
-                    <h4>Quick Stats</h4>
-                    <p>Ringkasan statistik keuangan</p>
-                  </div>
-                </div>
-                <div class="widget-item" draggable="true" data-widget="cash-flow">
-                  <div class="widget-icon">📈</div>
-                  <div class="widget-info">
-                    <h4>Cash Flow</h4>
-                    <p>Grafik aliran kas</p>
-                  </div>
-                </div>
-                <div class="widget-item" draggable="true" data-widget="expense-distribution">
-                  <div class="widget-icon">🍩</div>
-                  <div class="widget-info">
-                    <h4>Distribusi Pengeluaran</h4>
-                    <p>Grafik donut pengeluaran per kategori</p>
-                  </div>
-                </div>
-                <div class="widget-item" draggable="true" data-widget="goals">
-                  <div class="widget-icon">🎯</div>
-                  <div class="widget-info">
-                    <h4>Goals Progress</h4>
-                    <p>Progress tujuan keuangan</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-section">
-              <h3>Widget Aktif</h3>
-              <div class="widget-list" id="active-widgets">
-                <!-- Active widgets will be populated by JavaScript -->
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -171,9 +233,54 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
     <!-- File Konfigurasi Firebase -->
     <script src="config.js"></script>
+
+    <!-- Authentication Script -->
+    <script>
+      // Check authentication status
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in
+          console.log('User is signed in:', user.email);
+          
+          // Update user profile display
+          const userAvatar = document.getElementById('userAvatar');
+          const userName = document.getElementById('userName');
+          // Sidebar logout only
+          const logoutBtn = document.getElementById('logoutBtn');
+          
+          // Set user avatar (initials or photo)
+          if (user.photoURL) {
+            userAvatar.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+          } else {
+            userAvatar.textContent = user.displayName ? 
+              user.displayName.split(' ').map(n => n[0]).join('').toUpperCase() : 
+              user.email.split('@')[0].toUpperCase();
+          }
+          
+          // Set user name
+          userName.textContent = user.displayName || user.email.split('@')[0];
+          
+          // Add logout functionality (sidebar only)
+          if (logoutBtn) {
+            logoutBtn.onclick = function() {
+              firebase.auth().signOut().then(() => {
+                window.location.href = 'login.html';
+              }).catch((error) => {
+                console.error('Logout error:', error);
+              });
+            };
+          }
+        } else {
+          // User is signed out, redirect to login
+          console.log('User is signed out');
+          window.location.href = 'login.html';
+        }
+      });
+    </script>
 
     <!-- Common Functions -->
     <script src="common.js"></script>

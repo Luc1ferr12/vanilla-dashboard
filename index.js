@@ -1,6 +1,7 @@
 // index.js - Logika khusus untuk halaman index.html (Dashboard)
 
 document.addEventListener('DOMContentLoaded', function() {
+    translatePage(); // Tambahkan ini agar dashboard langsung menerjemahkan label
     // Hanya jalankan kode ini jika berada di halaman index.html atau root path
     const isDashboardPage = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
 
@@ -95,10 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Dashboard Page - Calculated Total Savings (Filtered):', totalSavings);
                 console.log('Dashboard Page - Calculated Balance (Based on Filtered/Adjusted Income):', balance);
 
-                if (totalIncomeValueElement) totalIncomeValueElement.textContent = formatRupiah(currentTotalIncome);
-                if (totalExpensesValueElement) totalExpensesValueElement.textContent = formatRupiah(totalExpenses);
-                if (totalSavingsValueElement) totalSavingsValueElement.textContent = formatRupiah(totalSavings);
-                if (balanceValueElement) balanceValueElement.textContent = formatRupiah(balance);
+                if (totalIncomeValueElement) totalIncomeValueElement.textContent = formatCurrency(currentTotalIncome);
+                if (totalExpensesValueElement) totalExpensesValueElement.textContent = formatCurrency(totalExpenses);
+                if (totalSavingsValueElement) totalSavingsValueElement.textContent = formatCurrency(totalSavings);
+                if (balanceValueElement) balanceValueElement.textContent = formatCurrency(balance);
                 
                 if (balanceGrowthRateElement) {
                     const percentageForDisplay = selectedMonth === 'All' ? expensesVsIncomePercentage : (currentTotalIncome > 0 ? (totalExpenses / currentTotalIncome * 100) : 0);
@@ -139,9 +140,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const totalExpenses = processedData.expenses.reduce((sum, val) => sum + val, 0);
             const totalSavings = processedData.savings.reduce((sum, val) => sum + val, 0);
 
-            if (incomeLegendElement) incomeLegendElement.textContent = formatRupiah(totalIncome);
-            if (expensesLegendElement) expensesLegendElement.textContent = formatRupiah(totalExpenses);
-            if (savingsLegendElement) savingsLegendElement.textContent = formatRupiah(totalSavings);
+            if (incomeLegendElement) incomeLegendElement.textContent = formatCurrency(totalIncome);
+            if (expensesLegendElement) expensesLegendElement.textContent = formatCurrency(totalExpenses);
+            if (savingsLegendElement) savingsLegendElement.textContent = formatCurrency(totalSavings);
         }
 
         function processDataForChart(data, period) {
@@ -304,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         label += ': ';
                                     }
                                     if (context.parsed.y !== null) {
-                                        label += formatRupiah(context.parsed.y);
+                                        label += formatCurrency(context.parsed.y);
                                     }
                                     return label;
                                 }
@@ -316,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return formatRupiah(value);
+                                    return formatCurrency(value);
                                 },
                                 color: getComputedStyle(document.body).getPropertyValue('--text-color'),
                                 font: {
@@ -428,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         label += ': ';
                                     }
                                     if (context.parsed !== null) {
-                                        label += formatRupiah(context.parsed) + ` (${percentages[context.dataIndex]}%)`;
+                                        label += formatCurrency(context.parsed) + ` (${percentages[context.dataIndex]}%)`;
                                     }
                                     return label;
                                 }
@@ -452,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     legendItem.className = 'legend-item';
                     legendItem.innerHTML = `
                         <div class="legend-color" style="background-color: ${backgroundColors[index % backgroundColors.length]}"></div>
-                        <div class="legend-text">${item.item}: ${formatRupiah(item.amount)} (${item.percentage.toFixed(2)}%)</div>
+                        <div class="legend-text">${item.item}: ${formatCurrency(item.amount)} (${item.percentage.toFixed(2)}%)</div>
                     `;
                     expenseDistributionLegendContainer.appendChild(legendItem);
                 });
@@ -510,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         row.innerHTML = `
                             <td>${bill.platform || bill.name || ''}</td>
                             <td>${displayDueDate}</td>
-                            <td>${formatRupiah(bill['monthly-payment'] || bill.amount || 0)}</td>
+                            <td>${formatCurrency(bill['monthly-payment'] || bill.amount || 0)}</td>
                         `;
                     });
                 }
@@ -602,9 +603,9 @@ document.addEventListener('DOMContentLoaded', function() {
             div.className = 'goal-item';
             
             const remaining = target - current;
-            const formattedCurrent = formatRupiah(current);
-            const formattedTarget = formatRupiah(target);
-            const formattedRemaining = formatRupiah(remaining);
+            const formattedCurrent = formatCurrency(current);
+            const formattedTarget = formatCurrency(target);
+            const formattedRemaining = formatCurrency(remaining);
 
             div.innerHTML = `
                 <div class="goal-header">
@@ -666,5 +667,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        updateWelcomeUser();
     }
-}); 
+});
+
+function updateWelcomeUser() {
+    const welcomeUser = document.getElementById('welcomeUser');
+    if (!welcomeUser) return;
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            const savedDisplayName = localStorage.getItem('userDisplayName');
+            const displayName = user.displayName || savedDisplayName || user.email.split('@')[0];
+            welcomeUser.textContent = `Welcome, ${displayName}`;
+        } else {
+            welcomeUser.textContent = 'Welcome, Guest';
+        }
+    });
+} 

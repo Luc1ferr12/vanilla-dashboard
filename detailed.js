@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             totalAmount += parseFloat(item.amount) || 0;
           });
           if (totalAmountSpan) {
-            totalAmountSpan.textContent = `Total: ${formatRupiah(totalAmount)}`;
+            totalAmountSpan.textContent = `Total: ${formatCurrency(totalAmount)}`;
           }
 
           // Render tabel
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async function() {
               <td>${item.month}</td>
               <td>${item.category}</td>
               <td>${item.item}</td>
-              <td>${formatRupiah(item.amount)}</td>
+              <td>${formatCurrency(item.amount)}</td>
               <td>
                 <button class="edit-btn" data-id="${item.id}">Edit</button>
                 <button class="delete-btn" data-id="${item.id}">Delete</button>
@@ -451,13 +451,17 @@ document.addEventListener('DOMContentLoaded', async function() {
             const monthlyData = processDataForTrendChart(data, period);
             console.log(`Data untuk Trend Chart (${period}):`, monthlyData);
 
+            // Ambil dictionary translasi
+            const lang = localStorage.getItem('appLanguage') || 'en';
+            const dict = translations[lang] || translations['en'];
+
             trendChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: monthlyData.labels,
                     datasets: [
                         {
-                            label: 'Pemasukan',
+                            label: dict['income'] || 'Income',
                             data: monthlyData.income,
                             borderColor: '#43a047',
                             backgroundColor: 'rgba(67, 160, 71, 0.1)',
@@ -465,7 +469,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             fill: false
                         },
                         {
-                            label: 'Pengeluaran',
+                            label: dict['expenses'] || 'Expenses',
                             data: monthlyData.expenses,
                             borderColor: '#e53935',
                             backgroundColor: 'rgba(229, 57, 53, 0.1)',
@@ -480,7 +484,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     plugins: {
                         title: {
                             display: true,
-                            text: `Tren Pemasukan dan Pengeluaran (${period})`
+                            text: `${dict['trend_chart_title'] || 'Income and Expense Trend'} (${period})`
                         }
                     },
                     scales: {
@@ -488,14 +492,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return formatRupiah(value);
+                                    return formatCurrency(value);
                                 }
                             }
                         },
                         x: {
                             title: {
                                 display: true,
-                                text: period === 'Daily' ? 'Tanggal' : (period === 'Weekly' ? 'Minggu' : period)
+                                text: period === 'Daily' ? (dict['date'] || 'Date') : (period === 'Weekly' ? (dict['week'] || 'Week') : period)
                             }
                         }
                     }
@@ -516,10 +520,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             const categoryData = processDataForCategoryChart(data, period);
             console.log(`Data untuk Category Chart (${period}):`, categoryData);
 
+            // Ambil dictionary translasi
+            const lang = localStorage.getItem('appLanguage') || 'en';
+            const dict = translations[lang] || translations['en'];
+
             // Hanya tampilkan grafik jika ada data
             if (categoryData.labels.length === 0) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                const noDataText = 'Tidak ada data pengeluaran untuk ditampilkan';
+                const noDataText = dict['no_expense_data'] || 'No expense data to display';
                 ctx.font = '14px Poppins';
                 ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-color');
                 ctx.textAlign = 'center';
@@ -545,7 +553,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     plugins: {
                         title: {
                             display: true,
-                            text: `Distribusi Pengeluaran per Kategori (${period})`
+                            text: `${dict['category_chart_title'] || 'Expense Distribution by Category'} (${period})`
                         },
                         legend: {
                             position: 'right',
@@ -564,7 +572,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                                         label += ': ';
                                     }
                                     if (context.parsed !== null) {
-                                        label += formatRupiah(context.parsed) + ' (' + context.dataset.data[context.dataIndex] + '%';
+                                        label += formatCurrency(context.parsed) + ' (' + context.dataset.data[context.dataIndex] + '%';
                                     }
                                     return label;
                                 }
@@ -815,7 +823,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     if (monthIndex !== undefined && itemRow.cells.length > monthIndex) {
                         const monthCell = itemRow.cells[monthIndex];
                         // Menimpa nilai bulan dengan jumlah yang diagregasi
-                        monthCell.textContent = formatRupiah(dataItem.amount);
+                        monthCell.textContent = formatCurrency(dataItem.amount);
 
                         // Hitung ulang Total
                         let total = 0;
@@ -828,7 +836,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             }
                         }
                         if (itemRow.cells.length > 13) {
-                            itemRow.cells[13].textContent = formatRupiah(total);
+                            itemRow.cells[13].textContent = formatCurrency(total);
                         }
                     }
                 }
@@ -882,36 +890,36 @@ document.addEventListener('DOMContentLoaded', async function() {
                     // Dapatkan target budget untuk kategori Expenses dari item ini
                     const targetBudget = budgetTargetsMap.get(item) || 0; // Mengambil target berdasarkan item/kategori
                     const targetBudgetCell = row.insertCell(1);
-                    targetBudgetCell.textContent = targetBudget > 0 ? formatRupiah(targetBudget) : '-';
+                    targetBudgetCell.textContent = targetBudget > 0 ? formatCurrency(targetBudget) : '-';
                     
                     let runningTotal = 0;
                     for (let i = 1; i <= 12; i++) {
                         const monthName = Object.keys(monthColumnIndex).find(key => monthColumnIndex[key] === i);
                         const amount = months[monthName] || 0;
                         const cell = row.insertCell(i + 1);
-                        cell.textContent = formatRupiah(amount);
+                        cell.textContent = formatCurrency(amount);
                         // Tambahkan indikator visual jika pengeluaran bulanan melebihi target budget
                         if (targetBudget > 0 && amount > targetBudget) {
                             cell.style.color = '#e53935'; // Merah untuk pengeluaran yang melebihi target
-                            cell.innerHTML = `${formatRupiah(amount)} <span style="color: #e53935;">⚠️</span>`;
+                            cell.innerHTML = `${formatCurrency(amount)} <span style="color: #e53935;">⚠️</span>`;
                         } else if (targetBudget > 0 && amount <= targetBudget) {
                             cell.style.color = '#43a047'; // Hijau untuk pengeluaran yang masih dalam target
-                            cell.innerHTML = `${formatRupiah(amount)} <span style="color: #43a047;">✓</span>`;
+                            cell.innerHTML = `${formatCurrency(amount)} <span style="color: #43a047;">✓</span>`;
                         }
                         runningTotal += amount;
                     }
                     // Tambahkan indikator visual untuk total keseluruhan
                     const totalCell = row.insertCell(14);
-                    totalCell.textContent = formatRupiah(runningTotal);
+                    totalCell.textContent = formatCurrency(runningTotal);
                     if (targetBudget > 0) {
                         const monthlyTarget = targetBudget; // Target per bulan
                         const yearlyTarget = monthlyTarget * 12; // Target per tahun
                         if (runningTotal > yearlyTarget) {
                             totalCell.style.color = '#e53935'; // Merah untuk total yang melebihi target tahunan
-                            totalCell.innerHTML = `${formatRupiah(runningTotal)} <span style="color: #e53935;">⚠️</span>`;
+                            totalCell.innerHTML = `${formatCurrency(runningTotal)} <span style="color: #e53935;">⚠️</span>`;
                         } else {
                             totalCell.style.color = '#43a047'; // Hijau untuk total yang masih dalam target tahunan
-                            totalCell.innerHTML = `${formatRupiah(runningTotal)} <span style="color: #43a047;">✓</span>`;
+                            totalCell.innerHTML = `${formatCurrency(runningTotal)} <span style="color: #43a047;">✓</span>`;
                         }
                     }
                 }
@@ -942,7 +950,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 
                 // Tambahkan indikator visual untuk total target budget
                 if (totalTargetBudget > 0) {
-                    totalCells[1].innerHTML = `${formatRupiah(totalTargetBudget)} <span style="color: #1e88e5;">🎯</span>`;
+                    totalCells[1].innerHTML = `${formatCurrency(totalTargetBudget)} <span style="color: #1e88e5;">🎯</span>`;
                 }
             }
 
@@ -974,27 +982,27 @@ document.addEventListener('DOMContentLoaded', async function() {
                         const monthlyTarget = columnTotals[1] / 12; // Target per bulan
                         if (columnTotals[j] > monthlyTarget) {
                             totalCells[j].style.color = '#e53935';
-                            totalCells[j].innerHTML = `${formatRupiah(columnTotals[j])} <span style="color: #e53935;">⚠️</span>`;
+                            totalCells[j].innerHTML = `${formatCurrency(columnTotals[j])} <span style="color: #e53935;">⚠️</span>`;
                         } else {
                             totalCells[j].style.color = '#43a047';
-                            totalCells[j].innerHTML = `${formatRupiah(columnTotals[j])} <span style="color: #43a047;">✓</span>`;
+                            totalCells[j].innerHTML = `${formatCurrency(columnTotals[j])} <span style="color: #43a047;">✓</span>`;
                         }
                     } else if (category === 'Expenses' && j === 14) {
                         // Untuk total keseluruhan, bandingkan dengan target tahunan
                         const yearlyTarget = columnTotals[1];
                         if (columnTotals[j] > yearlyTarget) {
                             totalCells[j].style.color = '#e53935';
-                            totalCells[j].innerHTML = `${formatRupiah(columnTotals[j])} <span style="color: #e53935;">⚠️</span>`;
+                            totalCells[j].innerHTML = `${formatCurrency(columnTotals[j])} <span style="color: #e53935;">⚠️</span>`;
                         } else {
                             totalCells[j].style.color = '#43a047';
-                            totalCells[j].innerHTML = `${formatRupiah(columnTotals[j])} <span style="color: #43a047;">✓</span>`;
+                            totalCells[j].innerHTML = `${formatCurrency(columnTotals[j])} <span style="color: #43a047;">✓</span>`;
                         }
                     } else {
-                        totalCells[j].textContent = formatRupiah(columnTotals[j]);
+                        totalCells[j].textContent = formatCurrency(columnTotals[j]);
                     }
                 }
             }
-            console.log(`Detailed Page - Calculated Total for ${category}: Grand Total ${formatRupiah(categoryGrandTotal)}, Column Totals:`, columnTotals);
+            console.log(`Detailed Page - Calculated Total for ${category}: Grand Total ${formatCurrency(categoryGrandTotal)}, Column Totals:`, columnTotals);
         }
 
         // Fungsi untuk menangani perubahan periode
@@ -1257,5 +1265,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             });
         }
+
+        updateWelcomeUser();
     }
-}); 
+});
+
+function updateWelcomeUser() {
+  const welcomeUser = document.getElementById('welcomeUser');
+  if (!welcomeUser) return;
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      const savedDisplayName = localStorage.getItem('userDisplayName');
+      const displayName = user.displayName || savedDisplayName || user.email.split('@')[0];
+      welcomeUser.textContent = `Welcome, ${displayName}`;
+    } else {
+      welcomeUser.textContent = 'Welcome, Guest';
+    }
+  });
+} 

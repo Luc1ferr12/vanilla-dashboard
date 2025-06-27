@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 tr.innerHTML = `
                     <td>${debt.platform || ''}</td>
-                    <td>${formatRupiah(debt['loan-amount'] || 0)}</td>
-                    <td>${formatRupiah(debt['monthly-payment'] || 0)}</td>
+                    <td>${formatCurrency(debt['loan-amount'] || 0)}</td>
+                    <td>${formatCurrency(debt['monthly-payment'] || 0)}</td>
                     <td>${(debt['paid-installments'] || 0)}/${(debt['total-installments'] || 0)}</td>
                     <td>${(debt.dueDate || debt['due-date'] || '')}</td>
                     <td>${debt['start-date'] || ''}</td>
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Perbarui total yang disorot di DOM
             if (highlightedTotalSpan) {
-                highlightedTotalSpan.textContent = `(Total Tagihan: ${formatRupiah(highlightedTotal)})`;
+                highlightedTotalSpan.textContent = `(Total Tagihan: ${formatCurrency(highlightedTotal)})`;
             }
 
             // Tambahkan event listener untuk tombol-tombol
@@ -386,10 +386,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const remainingDebt = totalLoan - totalPaid;
 
             // Update nilai di kartu
-            document.getElementById('total-loan-value').textContent = formatRupiah(totalLoan);
-            document.getElementById('total-interest-value').textContent = formatRupiah(totalInterest);
-            document.getElementById('total-paid-value').textContent = formatRupiah(totalPaid);
-            document.getElementById('remaining-debt-value').textContent = formatRupiah(remainingDebt);
+            document.getElementById('total-loan-value').textContent = formatCurrency(totalLoan);
+            document.getElementById('total-interest-value').textContent = formatCurrency(totalInterest);
+            document.getElementById('total-paid-value').textContent = formatCurrency(totalPaid);
+            document.getElementById('remaining-debt-value').textContent = formatCurrency(remainingDebt);
         }
 
         // Muat data saat halaman dimuat
@@ -397,5 +397,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Paparkan allDebtsData ke objek window setelah dimuat
         window.allDebtsData = allDebtsData;
+
+        updateWelcomeUser();
     }
-}); 
+});
+
+function updateWelcomeUser() {
+    const welcomeUser = document.getElementById('welcomeUser');
+    if (!welcomeUser) return;
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            const savedDisplayName = localStorage.getItem('userDisplayName');
+            const displayName = user.displayName || savedDisplayName || user.email.split('@')[0];
+            welcomeUser.textContent = `Welcome, ${displayName}`;
+        } else {
+            welcomeUser.textContent = 'Welcome, Guest';
+        }
+    });
+} 

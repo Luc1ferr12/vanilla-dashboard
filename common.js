@@ -91,12 +91,226 @@ function formatInputWithThousands(numberString) {
     return formattedNumber;
 }
 
+// Sistem Translasi Sederhana
+const translations = {
+  en: {
+    'settings_title': 'Settings',
+    'settings_subtitle': 'Customize the look and settings of the app',
+    'account_info': 'Account Information',
+    'display_name': 'Display Name',
+    'display_name_placeholder': 'Enter display name',
+    'email': 'Email',
+    'email_placeholder': 'Your Google email',
+    'email_help': 'Email cannot be changed because it is linked to Google',
+    'location': 'Location',
+    'save_changes': 'Save Changes',
+    'app_preferences': 'App Preferences',
+    'currency': 'Currency',
+    'language': 'Language',
+    'save_preferences': 'Save Preferences',
+    'theme_and_color': 'Theme and Color',
+    'color_palette': 'Color Palette',
+    'welcome': 'Welcome,',
+    // Country names
+    'country_id': 'Indonesia',
+    'country_my': 'Malaysia',
+    'country_sg': 'Singapore',
+    'country_th': 'Thailand',
+    'country_ph': 'Philippines',
+    'country_vn': 'Vietnam',
+    'country_au': 'Australia',
+    'country_us': 'United States',
+    'country_gb': 'United Kingdom',
+    'country_ca': 'Canada',
+    'country_jp': 'Japan',
+    'country_kr': 'South Korea',
+    'country_cn': 'China',
+    'country_in': 'India',
+    'country_de': 'Germany',
+    'country_fr': 'France',
+    'country_it': 'Italy',
+    'country_es': 'Spain',
+    'country_nl': 'Netherlands',
+    'country_br': 'Brazil',
+    'country_mx': 'Mexico',
+    'country_ar': 'Argentina',
+    'country_za': 'South Africa',
+    'country_eg': 'Egypt',
+    'country_ng': 'Nigeria',
+    'country_ke': 'Kenya',
+    'country_ru': 'Russia',
+    'country_tr': 'Turkey',
+    'country_sa': 'Saudi Arabia',
+    'country_ae': 'United Arab Emirates',
+    'country_il': 'Israel',
+    'country_ir': 'Iran',
+    'country_pk': 'Pakistan',
+    'country_bd': 'Bangladesh',
+    'country_lk': 'Sri Lanka',
+    'country_np': 'Nepal',
+    'country_mm': 'Myanmar',
+    'country_kh': 'Cambodia',
+    'country_la': 'Laos',
+    'country_bn': 'Brunei',
+    'country_tl': 'Timor-Leste',
+    'country_pg': 'Papua New Guinea',
+    'country_fj': 'Fiji',
+    'country_nz': 'New Zealand',
+    'country_other': 'Other',
+    'trend_chart_title': 'Income and Expense Trend',
+    'category_chart_title': 'Expense Distribution by Category',
+    'income': 'Income',
+    'expenses': 'Expenses',
+    'savings': 'Savings',
+    'no_expense_data': 'No expense data to display',
+    'date': 'Date',
+    'week': 'Week',
+    'dashboard_title': 'Budget Analytics',
+    'dashboard_subtitle': 'Track your budget performance and sales metrics',
+    'sidebar_dashboard': 'Dashboard',
+    'sidebar_detailed': 'Detailed',
+    'sidebar_debts': 'Debts',
+    'sidebar_budget_tools': 'Budget Tools',
+    'sidebar_settings': 'Settings',
+    'logout': 'Logout',
+    'stat_total_savings': 'Total Savings',
+    'stat_total_income': 'Total Income',
+    'stat_total_expenses': 'Total Expenses',
+    'stat_balance': 'Balance',
+    'stat_badge_savings': '+30 New Additions',
+    'stat_badge_balance': '+5.2% Growth Rate',
+    // ... tambahkan key lain sesuai kebutuhan ...
+  },
+  id: {
+    'settings_title': 'Pengaturan',
+    'settings_subtitle': 'Kustomisasi tampilan dan pengaturan aplikasi',
+    'account_info': 'Informasi Akun',
+    'display_name': 'Nama Tampilan',
+    'display_name_placeholder': 'Masukkan nama tampilan',
+    'email': 'Email',
+    'email_placeholder': 'Email Google Anda',
+    'email_help': 'Email tidak dapat diubah karena terhubung dengan Google',
+    'location': 'Lokasi',
+    'save_changes': 'Simpan Perubahan',
+    'app_preferences': 'Preferensi Aplikasi',
+    'currency': 'Mata Uang',
+    'language': 'Bahasa',
+    'save_preferences': 'Simpan Preferensi',
+    'theme_and_color': 'Tema dan Warna',
+    'color_palette': 'Palet Warna',
+    'welcome': 'Selamat datang,',
+    // Country names
+    'country_id': 'Indonesia',
+    'country_my': 'Malaysia',
+    'country_sg': 'Singapura',
+    'country_th': 'Thailand',
+    'country_ph': 'Filipina',
+    'country_vn': 'Vietnam',
+    'country_au': 'Australia',
+    'country_us': 'Amerika Serikat',
+    'country_gb': 'Inggris',
+    'country_ca': 'Kanada',
+    'country_jp': 'Jepang',
+    'country_kr': 'Korea Selatan',
+    'country_cn': 'Tiongkok',
+    'country_in': 'India',
+    'country_de': 'Jerman',
+    'country_fr': 'Perancis',
+    'country_it': 'Italia',
+    'country_es': 'Spanyol',
+    'country_nl': 'Belanda',
+    'country_br': 'Brasil',
+    'country_mx': 'Meksiko',
+    'country_ar': 'Argentina',
+    'country_za': 'Afrika Selatan',
+    'country_eg': 'Mesir',
+    'country_ng': 'Nigeria',
+    'country_ke': 'Kenya',
+    'country_ru': 'Rusia',
+    'country_tr': 'Turki',
+    'country_sa': 'Arab Saudi',
+    'country_ae': 'Uni Emirat Arab',
+    'country_il': 'Israel',
+    'country_ir': 'Iran',
+    'country_pk': 'Pakistan',
+    'country_bd': 'Bangladesh',
+    'country_lk': 'Sri Lanka',
+    'country_np': 'Nepal',
+    'country_mm': 'Myanmar',
+    'country_kh': 'Kamboja',
+    'country_la': 'Laos',
+    'country_bn': 'Brunei',
+    'country_tl': 'Timor Leste',
+    'country_pg': 'Papua Nugini',
+    'country_fj': 'Fiji',
+    'country_nz': 'Selandia Baru',
+    'country_other': 'Lainnya',
+    'trend_chart_title': 'Tren Pemasukan dan Pengeluaran',
+    'category_chart_title': 'Distribusi Pengeluaran per Kategori',
+    'income': 'Pemasukan',
+    'expenses': 'Pengeluaran',
+    'savings': 'Tabungan',
+    'no_expense_data': 'Tidak ada data pengeluaran untuk ditampilkan',
+    'date': 'Tanggal',
+    'week': 'Minggu',
+    'dashboard_title': 'Analitik Anggaran',
+    'dashboard_subtitle': 'Pantau performa anggaran dan metrik keuangan Anda',
+    'sidebar_dashboard': 'Dasbor',
+    'sidebar_detailed': 'Rincian',
+    'sidebar_debts': 'Hutang',
+    'sidebar_budget_tools': 'Alat Anggaran',
+    'sidebar_settings': 'Pengaturan',
+    'logout': 'Keluar',
+    'stat_total_savings': 'Total Tabungan',
+    'stat_total_income': 'Total Pemasukan',
+    'stat_total_expenses': 'Total Pengeluaran',
+    'stat_balance': 'Saldo',
+    'stat_badge_savings': '+30 Penambahan Baru',
+    'stat_badge_balance': '+5.2% Pertumbuhan',
+    // ... tambahkan key lain sesuai kebutuhan ...
+  }
+};
+
+function setLanguage(lang) {
+  localStorage.setItem('appLanguage', lang);
+  translatePage();
+}
+
+function translatePage() {
+  const lang = localStorage.getItem('appLanguage') || 'en';
+  const dict = translations[lang] || translations['en'];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = dict[key];
+      } else {
+        el.textContent = dict[key];
+      }
+    }
+  });
+  // Untuk placeholder khusus
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (dict[key]) {
+      el.placeholder = dict[key];
+    }
+  });
+  // Khusus untuk welcome user
+  const welcomeUser = document.getElementById('welcomeUser');
+  if (welcomeUser) {
+    const displayName = welcomeUser.textContent.split(',')[1]?.trim() || '';
+    welcomeUser.textContent = `${dict['welcome']} ${displayName}`;
+  }
+}
+
 // Apply saved theme and palette on load
 document.addEventListener('DOMContentLoaded', function() {
     applySavedThemeAndPalette();
 
     // Initialize color palettes on DOMContentLoaded (only attaches click handlers if elements exist)
     initializeColorPalettes();
+    translatePage();
 });
 
 // Fungsi untuk mengatur tema (dark/light)
@@ -339,4 +553,29 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-}); 
+});
+
+// Fungsi global untuk format currency sesuai preferensi user
+function formatCurrency(amount) {
+    const currency = localStorage.getItem('appCurrency') || 'IDR';
+    let locale = 'id-ID';
+    switch (currency) {
+        case 'USD': locale = 'en-US'; break;
+        case 'EUR': locale = 'de-DE'; break;
+        case 'SGD': locale = 'en-SG'; break;
+        case 'AUD': locale = 'en-AU'; break;
+        case 'MYR': locale = 'ms-MY'; break;
+        case 'JPY': locale = 'ja-JP'; break;
+        case 'KRW': locale = 'ko-KR'; break;
+        case 'GBP': locale = 'en-GB'; break;
+        case 'CNY': locale = 'zh-CN'; break;
+        default: locale = 'id-ID'; break;
+    }
+    const numberAmount = parseFloat(amount) || 0;
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    }).format(numberAmount);
+} 

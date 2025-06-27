@@ -30,11 +30,10 @@
       </div>
 
       <div class="header-actions">
-        <div>🔔</div>
 
-        <div class="user-profile">
-          <div class="user-avatar">LCF</div>
-          <div>Fallen</div>
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar" id="userAvatar">LCF</div>
+          <div id="userName">Fallen</div>
         </div>
       </div>
     </div>
@@ -61,6 +60,9 @@
         <div class="nav-icon">⚙️</div>
         <div class="nav-label">Settings</div>
       </a>
+      <button id="logoutBtn" class="logout-btn sidebar-logout" style="width: 80%; margin: 30px auto 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="bx bx-log-out"></i> Logout
+      </button>
     </div>
 
     <!-- Main Content for Budget Tools Page -->
@@ -286,9 +288,54 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
     <!-- File Konfigurasi Firebase -->
     <script src="config.js"></script>
+
+    <!-- Authentication Script -->
+    <script>
+      // Check authentication status
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in
+          console.log('User is signed in:', user.email);
+          
+          // Update user profile display
+          const userAvatar = document.getElementById('userAvatar');
+          const userName = document.getElementById('userName');
+          // Sidebar logout only
+          const logoutBtn = document.getElementById('logoutBtn');
+          
+          // Set user avatar (initials or photo)
+          if (user.photoURL) {
+            userAvatar.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+          } else {
+            userAvatar.textContent = user.displayName ? 
+              user.displayName.split(' ').map(n => n[0]).join('').toUpperCase() : 
+              user.email.split('@')[0].toUpperCase();
+          }
+          
+          // Set user name
+          userName.textContent = user.displayName || user.email.split('@')[0];
+          
+          // Add logout functionality (sidebar only)
+          if (logoutBtn) {
+            logoutBtn.onclick = function() {
+              firebase.auth().signOut().then(() => {
+                window.location.href = 'login.html';
+              }).catch((error) => {
+                console.error('Logout error:', error);
+              });
+            };
+          }
+        } else {
+          // User is signed out, redirect to login
+          console.log('User is signed out');
+          window.location.href = 'login.html';
+        }
+      });
+    </script>
 
     <!-- Common Functions -->
     <script src="common.js"></script>
